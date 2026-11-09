@@ -16,8 +16,8 @@ const head = [
 ]
 const rows = [
   [L.price, ...PACKAGES.map((p) => p.price)],
-  [L.audience, ...C.compare.audience],
-  [L.scope, ...C.compare.scope],
+  [L.audience, ...PACKAGES.map((p) => p.audience)],
+  [L.scope, ...PACKAGES.map((p) => p.scope)],
   [L.term, ...PACKAGES.map((p) => p.term)],
   [L.revisions, ...C.compare.revisions],
   [L.pulse, ...PACKAGES.map((p) => p.pulse)],

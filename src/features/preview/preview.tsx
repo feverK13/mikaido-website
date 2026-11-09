@@ -265,7 +265,7 @@ export function Preview() {
       <Block title="Term і Stat">
         <div className={row}>
           <Term>до 3 тижнів</Term>
-          <Term size="sm">4-7 тижнів</Term>
+          <Term size="sm">4–7 тижнів</Term>
           <Stat>01 / готово</Stat>
           <Stat now>03 / зараз</Stat>
         </div>
