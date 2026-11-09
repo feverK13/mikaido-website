@@ -118,6 +118,10 @@ async function runCombo(theme, profile) {
             await page.waitForTimeout(200)
           }
 
+          // Нативна група radio: Tab потрапляє лише на вибраний, решта досягаються стрілками.
+          const inRadioGroup = await focusEl.evaluate((e) => e.type === 'radio' && !e.checked)
+          if (inRadioGroup) continue
+
           if (await pressTabTo(page, focusEl)) {
             await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
             await page.waitForTimeout(260)
