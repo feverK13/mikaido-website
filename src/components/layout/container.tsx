@@ -6,7 +6,7 @@ export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement
   return (
     <div
       className={cn(
-        'mx-auto w-full max-w-[calc(1200px+128px)] px-[max(16px,env(safe-area-inset-left,0px))] md:px-8 min-[1200px]:px-16',
+        'mx-auto w-full max-w-[calc(1200px+128px)] px-[max(16px,env(safe-area-inset-left,0px))] min-[768px]:px-8 min-[1200px]:px-16',
         className,
       )}
       {...props}

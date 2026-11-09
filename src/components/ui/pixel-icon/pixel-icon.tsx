@@ -29,9 +29,11 @@ type PixelIconProps = Omit<SVGProps<SVGSVGElement>, 'name'> & {
   size?: 24 | 48
   /** Активний піксель «o» стає spark. */
   active?: boolean
+  /** Колір активного пікселя: spark за замовчуванням, accent у блоках макета Головної. */
+  activeTone?: 'spark' | 'accent'
 }
 
-export function PixelIcon({ name, size = 24, active = false, ...props }: PixelIconProps) {
+export function PixelIcon({ name, size = 24, active = false, activeTone = 'spark', ...props }: PixelIconProps) {
   const [dx, dy] = OFFSETS[name]
 
   return (
@@ -53,7 +55,7 @@ export function PixelIcon({ name, size = 24, active = false, ...props }: PixelIc
               y={y}
               width="1"
               height="1"
-              fill={cell === 'o' && active ? 'var(--spark)' : undefined}
+              fill={cell === 'o' && active ? `var(--${activeTone})` : undefined}
             />
           ),
         ),

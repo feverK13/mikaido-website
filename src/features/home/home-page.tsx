@@ -1,6 +1,7 @@
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { Hero } from './components/hero'
+import { Path } from './components/path'
 
 /** Головна: шапка, секції за макетом docs/reference/mikaido-home.html, підвал. */
 export function HomePage() {
@@ -9,6 +10,7 @@ export function HomePage() {
       <Header />
       <main>
         <Hero />
+        <Path />
       </main>
       <Footer />
     </>

@@ -22,7 +22,7 @@ export function Section({ id, hero = false, className, children, ...props }: Sec
       )}
       {...props}
     >
-      <Container>{children}</Container>
+      <Container className="grid min-w-0 gap-[22px] [&>*]:min-w-0">{children}</Container>
     </section>
   )
 }
