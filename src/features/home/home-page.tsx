@@ -12,6 +12,7 @@ import { Path } from './components/path'
 import { Process } from './components/process'
 import { Support } from './components/support'
 import { Terms } from './components/terms'
+import { SKIP_LINK } from './content'
 
 /** Активний пункт навігації: секція, що перетинає середину вікна. */
 function useCurrentSection() {
@@ -45,8 +46,14 @@ export function HomePage({ onOpenCookieSettings }: HomePageProps) {
   const current = useCurrentSection()
   return (
     <>
+      <a
+        href="#main"
+        className="fixed top-2 left-2 z-[60] -translate-y-[200%] bg-fg px-4 py-2 text-t14 font-semibold text-bg no-underline focus-visible:translate-y-0"
+      >
+        {SKIP_LINK}
+      </a>
       <Header current={current} />
-      <main>
+      <main id="main">
         <Hero />
         <Path />
         <Cases />

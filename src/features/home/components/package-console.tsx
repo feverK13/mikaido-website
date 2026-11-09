@@ -95,7 +95,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
         aria-label={C.menuLabel}
         className="grid content-start gap-[2px] border-r border-fg bg-screen px-[18px] py-5 min-[901px]:grid-rows-[auto_repeat(4,auto)_auto_1fr] max-[900px]:border-r-0 max-[900px]:border-b"
       >
-        <div className="pb-3 pl-[34px] font-px text-px11 uppercase text-muted">{C.menuTitle}</div>
+        <div aria-hidden="true" className="pb-3 pl-[34px] font-px text-px11 uppercase text-muted">{C.menuTitle}</div>
         {PACKAGES.map((pkg, i) => (
           <button
             key={pkg.id}
@@ -120,7 +120,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
             <span className={cn('text-px11', i === current ? 'text-bg opacity-75' : 'text-muted')}>{pkg.term}</span>
           </button>
         ))}
-        <div className="mt-[10px] flex flex-wrap gap-[14px] border-t border-dashed border-line2 px-[10px] pt-4 font-px text-px11 uppercase text-muted [@media(hover:none)]:hidden">
+        <div aria-hidden="true" className="mt-[10px] flex flex-wrap gap-[14px] border-t border-dashed border-line2 px-[10px] pt-4 font-px text-px11 uppercase text-muted [@media(hover:none)]:hidden">
           {C.keys.map((k) => (
             <span key={k.keys}>
               <kbd className="mr-1 rounded-r2 border border-current px-1 py-[3px] font-px text-px11">{k.keys}</kbd>
@@ -128,7 +128,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
             </span>
           ))}
         </div>
-        <div className="mt-auto grid place-items-center pt-3 max-[900px]:hidden">
+        <div aria-hidden="true" className="mt-auto grid place-items-center pt-3 max-[900px]:hidden">
           <canvas ref={hologram} aria-hidden="true" className="block aspect-square w-[min(100%,260px)]" />
         </div>
       </div>
