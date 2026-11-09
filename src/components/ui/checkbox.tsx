@@ -11,7 +11,12 @@ type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
 export function Checkbox({ children, error, className, ...props }: CheckboxProps) {
   return (
     <div className="grid gap-1">
-      <label className={cn('flex cursor-pointer select-none items-start gap-space-3 text-t14', className)}>
+      <label
+        className={cn(
+          'flex cursor-pointer select-none items-start gap-space-3 text-t14 pointer-coarse:min-h-tap pointer-coarse:items-center',
+          className,
+        )}
+      >
         <input type="checkbox" className="peer sr-only" aria-invalid={error ? true : undefined} {...props} />
         <span
           className={cn(
@@ -40,7 +45,12 @@ const DOT_OCTAGON = '[clip-path:polygon(25%_0,75%_0,100%_25%,100%_75%,75%_100%,2
 /** Радіо восьмикутне, точка з'являється кроками steps(2). */
 export function Radio({ children, className, ...props }: RadioProps) {
   return (
-    <label className={cn('flex cursor-pointer select-none items-start gap-space-3 text-t14', className)}>
+    <label
+      className={cn(
+        'flex cursor-pointer select-none items-start gap-space-3 text-t14 pointer-coarse:min-h-tap pointer-coarse:items-center',
+        className,
+      )}
+    >
       <input type="radio" className="peer sr-only" {...props} />
       <span
         className={cn(

@@ -37,7 +37,7 @@ export function Alert({ tone = 'info', title, children, onClose, className }: Al
   return (
     <div role={tone === 'error' ? 'alert' : 'status'} className={cn(alertVariants({ tone }), className)}>
       <PixelIcon name={ICON_BY_TONE[tone ?? 'info']} size={24} />
-      <div>
+      <div className="min-w-0 [overflow-wrap:anywhere]">
         <b className="block font-semibold">{title}</b>
         {children && <span className="text-muted">{children}</span>}
       </div>
