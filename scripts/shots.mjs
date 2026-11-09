@@ -75,18 +75,23 @@ try {
         const section = sections.nth(s)
         const title = (await section.locator('h2').first().textContent()) ?? ''
         const base = `${theme}-${profile.name}-${String(s).padStart(2, '0')}-${slug(title)}`
+        await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme)
         await section.scrollIntoViewIfNeeded()
         await page.waitForTimeout(150)
         await section.screenshot({ path: `${OUT}/${base}-default.png` })
         count++
 
         const items = section.locator(INTERACTIVE)
-        const n = Math.min(await items.count(), MAX_PER_SECTION)
-        for (let i = 0; i < n; i++) {
+        const itemTotal = await items.count()
+        let shown = 0
+        for (let i = 0; i < itemTotal && shown < MAX_PER_SECTION; i++) {
+          if (!(await items.nth(i).isVisible()) || (await items.nth(i).evaluate((e) => !!e.closest("[inert]")))) continue
+          shown++
           const focusEl = await items.nth(i).elementHandle()
           const el = (await focusEl.evaluateHandle((e) => e.closest('label') ?? e)).asElement()
           await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
           const name = `${base}-${i}`
+          await page.evaluate(() => document.activeElement?.blur())
 
           if (!profile.touch) {
             const box = await el.boundingBox()
