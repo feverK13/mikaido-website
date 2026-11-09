@@ -3,7 +3,6 @@
 .btn-a {
   position: relative;
   isolation: isolate;
-  min-height: var(--spacing-tap);
   border: 0;
   cursor: pointer;
   color: var(--bg);

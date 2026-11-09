@@ -12,21 +12,21 @@ const buttonVariants = cva(
       variant: {
         primary: 'btn-a',
         secondary:
-          'min-h-tap cursor-pointer rounded-r3 border border-line2 bg-transparent text-fg transition-[border-color,background-color,transform] duration-fast ease-out-mk hover:border-fg hover:bg-surface2 active:translate-y-px active:bg-line',
+          'cursor-pointer rounded-r3 border border-line2 bg-transparent text-fg transition-[border-color,background-color,transform] duration-fast ease-out-mk hover:border-fg hover:bg-surface2 active:translate-y-px active:bg-line',
         ghost:
-          'min-h-tap cursor-pointer rounded-r3 border border-transparent bg-transparent text-fg transition-[background-color,transform] duration-fast ease-out-mk hover:bg-surface2 active:translate-y-px active:bg-line',
+          'cursor-pointer rounded-r3 border border-transparent bg-transparent text-fg transition-[background-color,transform] duration-fast ease-out-mk hover:bg-surface2 active:translate-y-px active:bg-line',
       },
       size: {
-        sm: 'text-t13 pointer-coarse:min-h-tap',
-        md: 'text-t16',
-        lg: 'text-t18',
+        sm: 'min-h-[34px] text-t13 pointer-coarse:min-h-tap',
+        md: 'min-h-tap text-t16',
+        lg: 'min-h-tap text-t18',
       },
     },
     compoundVariants: [
       { variant: 'primary', size: 'sm', class: 'px-4 py-[10px]' },
       { variant: 'primary', size: 'md', class: 'px-[22px] py-[14px]' },
       { variant: 'primary', size: 'lg', class: 'px-7 py-[18px]' },
-      { variant: ['secondary', 'ghost'], size: 'sm', class: 'min-h-[34px] px-[14px] py-[9px]' },
+      { variant: ['secondary', 'ghost'], size: 'sm', class: 'px-[14px] py-[9px]' },
       { variant: ['secondary', 'ghost'], size: 'md', class: 'px-5 py-[13px]' },
       { variant: ['secondary', 'ghost'], size: 'lg', class: 'px-6 py-[17px]' },
     ],
