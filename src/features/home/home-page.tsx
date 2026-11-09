@@ -34,8 +34,13 @@ function useCurrentSection() {
   return current
 }
 
+type HomePageProps = {
+  /** Відкриває вікно налаштувань cookies з підвалу. */
+  onOpenCookieSettings?: () => void
+}
+
 /** Головна: шапка, секції за макетом docs/reference/mikaido-home.html, підвал. */
-export function HomePage() {
+export function HomePage({ onOpenCookieSettings }: HomePageProps) {
   const [packageValue, setPackageValue] = useState(UNKNOWN_PACKAGE)
   const current = useCurrentSection()
   return (
@@ -52,7 +57,7 @@ export function HomePage() {
         <Faq />
         <Contact packageValue={packageValue} onPackageChange={setPackageValue} />
       </main>
-      <Footer />
+      <Footer onOpenCookieSettings={onOpenCookieSettings} />
       <MobileBar />
     </>
   )

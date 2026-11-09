@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+import { useCookieConsent } from '@/features/cookies/cookie-consent-context'
 import { HomePage } from '@/features/home/home-page'
 import { AppProvider } from './provider'
 
@@ -9,6 +10,11 @@ const Preview = import.meta.env.DEV
 
 const isPreviewRoute = () => window.location.pathname === '/__preview'
 
+function Home() {
+  const { openSettings } = useCookieConsent()
+  return <HomePage onOpenCookieSettings={openSettings} />
+}
+
 export function App() {
   return (
     <AppProvider>
@@ -17,7 +23,7 @@ export function App() {
           <Preview />
         </Suspense>
       ) : (
-        <HomePage />
+        <Home />
       )}
     </AppProvider>
   )
