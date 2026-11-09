@@ -36,6 +36,16 @@ export function Select({ label, options, value, onChange, className }: SelectPro
     return () => document.removeEventListener('pointerdown', onPointer)
   }, [open])
 
+  /* Нижня шторка до 860 px: сторінка під нею не прокручується. */
+  useEffect(() => {
+    if (!open || !matchMedia('(max-width: 860px)').matches) return
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = previous
+    }
+  }, [open])
+
   const openList = () => {
     setActive(selectedIndex)
     setOpen(true)
