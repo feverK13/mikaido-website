@@ -18,6 +18,9 @@ import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
 import { Footer } from '@/components/layout/footer'
+import { CookieBanner } from '@/features/cookies/cookie-banner'
+import { useCookieConsent } from '@/features/cookies/cookie-consent-context'
+import { CookieSettings } from '@/features/cookies/cookie-settings'
 import { Header } from '@/components/layout/header'
 import { IconButton } from '@/components/ui/icon-button'
 import { ICONS, type IconName } from '@/components/ui/pixel-icon/icons'
@@ -109,6 +112,7 @@ export function Preview() {
   const [text, setText] = useState('')
   const [pkgSelected, setPkgSelected] = useState<PackageId>('business')
   const [step, setStep] = useState(0)
+  const { openSettings } = useCookieConsent()
 
   useEffect(() => {
     const meta = document.createElement('meta')
@@ -152,7 +156,17 @@ export function Preview() {
       </Block>
 
       <Block title="Footer">
-        <Footer />
+        <Footer onOpenCookieSettings={openSettings} />
+      </Block>
+
+      <Block title="CookieBanner">
+        {/* transform створює контейнер для fixed: плашка й вікно показані всередині блоку */}
+        <div className="relative h-[460px] overflow-hidden border border-line [transform:translateZ(0)]">
+          <CookieBanner open onAcceptAll={() => {}} onNecessaryOnly={() => {}} onOpenSettings={() => {}} className="absolute" />
+        </div>
+        <div className="relative h-[460px] overflow-hidden border border-line [transform:translateZ(0)]">
+          <CookieSettings open modal={false} analytics={false} onClose={() => {}} onSave={() => {}} onAcceptAll={() => {}} className="absolute" />
+        </div>
       </Block>
 
       <Block title="ConditionsTable">

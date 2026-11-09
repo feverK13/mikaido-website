@@ -62,6 +62,7 @@ try {
         colorScheme: theme,
         reducedMotion: 'no-preference',
       })
+      await context.addInitScript(() => localStorage.setItem('mk_cookie_consent', JSON.stringify({ analytics: false, savedAt: Date.now() })))
       const page = await context.newPage()
       page.on('pageerror', (e) => errors.push(`${theme}/${profile.name}: ${e.message}`))
       page.on('console', (m) => m.type() === 'error' && errors.push(`${theme}/${profile.name}: ${m.text()}`))
