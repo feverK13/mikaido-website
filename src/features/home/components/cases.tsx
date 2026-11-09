@@ -26,7 +26,7 @@ export function Cases() {
           <span className="font-px text-px11 uppercase text-muted">{C.pending.label}</span>
           <b className="font-display font-medium">{C.pending.title}</b>
           <p className="text-t14 text-muted">{C.pending.text}</p>
-          <TextLink href={C.pending.link.href}>{C.pending.link.label}</TextLink>
+          <TextLink href={C.pending.link.href} className="justify-self-start pointer-coarse:pt-[10px]">{C.pending.link.label}</TextLink>
         </div>
       </div>
     </Section>
