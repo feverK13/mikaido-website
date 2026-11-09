@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import { useId, type InputHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { PixelIcon } from './pixel-icon/pixel-icon'
 
@@ -9,6 +9,7 @@ type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> & {
 
 /** Прапорець 20 × 20, уся смуга з текстом натискається. */
 export function Checkbox({ children, error, className, ...props }: CheckboxProps) {
+  const errorId = useId()
   return (
     <div className="grid gap-1">
       <label
@@ -17,7 +18,13 @@ export function Checkbox({ children, error, className, ...props }: CheckboxProps
           className,
         )}
       >
-        <input type="checkbox" className="peer sr-only" aria-invalid={error ? true : undefined} {...props} />
+        <input
+          type="checkbox"
+          className="peer sr-only"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
+          {...props}
+        />
         <span
           className={cn(
             'grid size-5 flex-none place-items-center border border-line3 bg-surface text-bg transition-[border-color,background-color] duration-fast ease-out-mk peer-checked:border-fg peer-checked:bg-fg peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent [&>svg]:opacity-0 peer-checked:[&>svg]:opacity-100',
@@ -29,7 +36,7 @@ export function Checkbox({ children, error, className, ...props }: CheckboxProps
         <span>{children}</span>
       </label>
       {error && (
-        <p role="alert" className="text-t13 text-spark">
+        <p id={errorId} role="alert" className="text-t13 text-spark">
           {error}
         </p>
       )}
