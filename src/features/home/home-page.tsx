@@ -5,6 +5,7 @@ import { Hero } from './components/hero'
 import { Packages } from './components/packages'
 import { Path } from './components/path'
 import { Process } from './components/process'
+import { Terms } from './components/terms'
 
 /** Головна: шапка, секції за макетом docs/reference/mikaido-home.html, підвал. */
 export function HomePage() {
@@ -17,6 +18,7 @@ export function HomePage() {
         <Cases />
         <Packages />
         <Process />
+        <Terms />
       </main>
       <Footer />
     </>
