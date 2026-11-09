@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+import { HomePage } from '@/features/home/home-page'
 import { AppProvider } from './provider'
 
 /* Сторінка перегляду компонентів: лише в dev, у production-збірку не потрапляє. */
@@ -16,10 +17,7 @@ export function App() {
           <Preview />
         </Suspense>
       ) : (
-        <main className="mx-auto max-w-[1200px] px-space-4 py-space-7">
-          <h1 className="font-display text-h48 max-md:text-h30">Mikaido</h1>
-          <p className="mt-space-4 font-px text-px11 uppercase text-spark">[заповнити]</p>
-        </main>
+        <HomePage />
       )}
     </AppProvider>
   )
