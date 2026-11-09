@@ -26,13 +26,8 @@ export function Header({ current, className }: HeaderProps) {
 
   return (
     <>
-      <header
-        className={cn(
-          'sticky top-0 z-30 bg-[color-mix(in_srgb,var(--bg)_92%,transparent)] backdrop-blur-[8px]',
-          className,
-        )}
-      >
-        <Container className="flex items-center justify-between gap-4 border-b border-fg py-[14px]">
+      <header className={cn('sticky top-0 z-30 border-b border-line bg-bg', className)}>
+        <Container className="flex items-center justify-between gap-4 py-[14px]">
           <BrandLink href="#top" />
           <nav aria-label="Головна навігація" className="flex gap-1 max-[860px]:hidden">
             {NAV_ITEMS.map((item) => (
@@ -61,7 +56,7 @@ export function Header({ current, className }: HeaderProps) {
           </div>
         </Container>
       </header>
-      {/* Шторка поза header: backdrop-filter створює контейнер для position: fixed. */}
+      {/* Шторка поза header, щоб position: fixed рахувався від вікна. */}
       <MobileMenu
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
