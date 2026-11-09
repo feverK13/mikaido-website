@@ -35,7 +35,11 @@ function AccordionRow({ item }: { item: AccordionItem }) {
         )}
       >
         <div className="overflow-hidden">
-          <p className="max-w-[62ch] pt-[14px] pb-5 text-t16 text-muted">{item.answer}</p>
+          {typeof item.answer === 'string' ? (
+            <p className="max-w-[62ch] pt-[14px] pb-5 text-t16 text-muted">{item.answer}</p>
+          ) : (
+            <div className="pt-3 pb-5">{item.answer}</div>
+          )}
         </div>
       </div>
     </>

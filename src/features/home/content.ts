@@ -55,3 +55,44 @@ export const CASES_SECTION = {
     link: { label: 'Ваш проєкт може бути наступним →', href: '#rozmova' },
   },
 }
+
+export const PACKAGES_SECTION = {
+  tab: '/04 Пакети',
+  title: 'Чотири пакети. Одна сума й конкретні дати',
+  lead: 'Кожен пакет можна розширити за доплату. Ціну й дати фіксуємо в пропозиції.',
+  menuTitle: 'Оберіть пакет',
+  menuLabel: 'Пакети',
+  keys: [
+    { keys: '↑↓', label: 'вибір' },
+    { keys: 'Enter', label: 'обрати' },
+  ],
+  detailRows: { scope: 'Обсяг', key: 'Ключове', revisions: 'Правки', pulse: 'Пульс у подарунок', payment: 'Оплата' },
+  discussCta: 'Обговорити',
+  ctaHref: '#rozmova',
+  /** Доповнення до config/packages.ts: що ключове в пакеті й яка голограма йому відповідає. */
+  extras: {
+    start: { key: 'Форма зі сповіщенням у Telegram, аналітика, картка в Google', model: 'page' },
+    business: { key: 'Онлайн-запис, аналітика з подіями, сторінки під послуги', model: 'calendar' },
+    pro: { key: 'До двох інтеграцій: CRM, Telegram-бот, сервіс запису, пошта', model: 'nodes' },
+    catalog: { key: 'Онлайн-оплата, Нова Пошта, сповіщення в Telegram, панель товарів', model: 'box' },
+  } as Record<'start' | 'business' | 'pro' | 'catalog', { key: string; model: 'page' | 'calendar' | 'nodes' | 'box' }>,
+  always: [
+    { icon: 'globe', text: 'Домен і хостинг на перший рік, на Вас' },
+    { icon: 'shield', text: 'Гарантія 60 днів' },
+    { icon: 'report', text: 'Код, доступи й інструкції після оплати' },
+  ] as { icon: 'globe' | 'shield' | 'report'; text: string }[],
+  compare: {
+    title: 'Порівняти всі пакети таблицею',
+    cornerLabel: 'Показник',
+    /** Рядки, чиї значення беремо з config/packages.ts: price і term. Решта тексту з макета. */
+    audience: ['Експерт, ФОП, майстер', 'Салон, клініка, студія, сервіс', 'Центр, школа, B2B', 'Магазин, виробник, майстерня'],
+    scope: [
+      'Лендінг до 7 блоків або до 3 сторінок',
+      'До 6 сторінок',
+      'До 12 сторінок, дві мови, блог',
+      'До 150 товарів, кошик, пошук, фільтри',
+    ],
+    revisions: ['2 + 1', '2 + 1', '3 + 2', '3 + 2'],
+    labels: { price: 'Ціна', audience: 'Для кого', scope: 'Обсяг', term: 'Строк', revisions: 'Правки', pulse: 'Пульс у подарунок' },
+  },
+}

@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 type ConditionsTableProps = {
-  head: string[]
+  head: ReactNode[]
   rows: ReactNode[][]
   /** Індекси колонок із цифрами: tabular-nums і без переносу. */
   numericColumns?: number[]
@@ -16,9 +16,9 @@ export function ConditionsTable({ head, rows, numericColumns = [], className }: 
       <table className="w-full border-collapse bg-surface text-t14">
         <thead>
           <tr>
-            {head.map((title) => (
+            {head.map((title, i) => (
               <th
-                key={title}
+                key={i}
                 className="border-b border-line px-[14px] py-3 text-left align-top font-px text-px11 font-normal uppercase text-muted"
               >
                 {title}
