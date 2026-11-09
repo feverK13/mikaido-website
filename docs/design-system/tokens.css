@@ -1,0 +1,19 @@
+/* Mikaido — generated from tokens.json */
+:root, [data-theme="light"] {--bg:#f7f8fa;--surface:#ffffff;--surface2:#eff1f4;--line:#dcdfe5;--line2:#c9cdd5;--line3:#868b97;--muted:#5d6170;--fg:#111216;--accent:#2c63b0;--spark:#a8396f;--tag:#e4e7ec;--screen:#e6e8ec;--iris-1:#5ecad6;--iris-2:#6b9fd4;--iris-3:#d06aae;--iris-4:#e87bad;--og-bg:#0c0d10;--shadow-modal:0 18px 40px -16px rgba(0,0,0,0.35);--shadow-paper:0 18px 40px -24px rgba(0,0,0,0.35)}
+[data-theme="dark"] {--bg:#0c0d10;--surface:#15161a;--surface2:#1d1f24;--line:#2a2d34;--line2:#3a3e46;--line3:#6e7380;--muted:#9ea2ae;--fg:#f5f6f8;--accent:#8db6ec;--spark:#f29ac2;--tag:#23262c;--screen:#101216}
+:root {--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:24px;--space-6:48px;--space-7:80px;--tap:44px;--radius-0:0px;--radius-2:2px;--radius-3:3px;--font-display:"Unbounded", "Arial Black", sans-serif;--font-body:"Wix Madefor Text", "Segoe UI", system-ui, sans-serif;--font-px:"Departure Mono", ui-monospace, monospace}
+.h-48{font-family:"Unbounded", "Arial Black", sans-serif;font-size:48px;line-height:1.05;font-weight:600;letter-spacing:-0.025em}
+.h-30{font-family:"Unbounded", "Arial Black", sans-serif;font-size:30px;line-height:1.1;font-weight:500;letter-spacing:-0.015em}
+.h-24{font-family:"Unbounded", "Arial Black", sans-serif;font-size:24px;line-height:1.15;font-weight:600;letter-spacing:-0.015em}
+.h-20{font-family:"Unbounded", "Arial Black", sans-serif;font-size:20px;line-height:1.2;font-weight:500;letter-spacing:-0.01em}
+.t-18{font-family:"Wix Madefor Text", "Segoe UI", system-ui, sans-serif;font-size:18px;line-height:1.55;font-weight:400}
+.t-16{font-family:"Wix Madefor Text", "Segoe UI", system-ui, sans-serif;font-size:16px;line-height:1.6;font-weight:400}
+.t-14{font-family:"Wix Madefor Text", "Segoe UI", system-ui, sans-serif;font-size:14px;line-height:1.5;font-weight:400}
+.t-13{font-family:"Wix Madefor Text", "Segoe UI", system-ui, sans-serif;font-size:13px;line-height:1.5;font-weight:400}
+.px-11{font-family:"Departure Mono", ui-monospace, monospace;font-size:11px;line-height:1;font-weight:400;text-transform:uppercase}
+.px-22{font-family:"Departure Mono", ui-monospace, monospace;font-size:22px;line-height:1;font-weight:400;text-transform:uppercase}
+.px-33{font-family:"Departure Mono", ui-monospace, monospace;font-size:33px;line-height:1;font-weight:400;text-transform:uppercase}
+.px-44{font-family:"Departure Mono", ui-monospace, monospace;font-size:44px;line-height:1;font-weight:400;text-transform:uppercase}
+@font-face{font-family:"Unbounded";src:url("fonts/Unbounded.woff2") format("woff2");font-weight:200 900;font-display:swap}
+@font-face{font-family:"Wix Madefor Text";src:url("fonts/WixMadeforText.woff2") format("woff2");font-weight:400 800;font-display:swap}
+@font-face{font-family:"Departure Mono";src:url("fonts/DepartureMono-Regular.woff2") format("woff2");font-weight:400;font-display:swap}

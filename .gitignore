@@ -1,0 +1,102 @@
+# Залежності
+node_modules/
+.pnp
+.pnp.js
+
+# Збірка й кеші
+dist/
+dist-ssr/
+build/
+coverage/
+.vite/
+.cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Змінні середовища (секрети не комітимо)
+.env
+.env.*
+!.env.example
+
+# Логи
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Тести (звіти)
+playwright-report/
+test-results/
+blob-report/
+
+# Редактори й IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.suo
+*.sln
+*.sw?
+
+# ОС
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Інструменти ШІ й локальні службові файли
+.claude/
+.planning/
+.context-mode/
+*.local
+
+# Внутрішня стратегія й інструкції (не для репозиторію)
+docs/product-marketing.md
+CLAUDE.md
+CLAUDE.local.md
+
+# Секрети, ключі, сертифікати
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.keystore
+secrets/
+credentials*.json
+service-account*.json
+client_secret*.json
+.npmrc
+.yarnrc.yml
+.netrc
+.aws/
+.firebase/
+.vercel/
+.netlify/
+
+# Дампи, резервні копії й дані клієнтів
+*.sql
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+*.csv
+*.xlsx
+*.zip
+*.tar
+*.tar.gz
+*.7z
+backups/
+private/
+
+
+# Тимчасові файли
+tmp/
+temp/
+*.tmp
+*.bak
