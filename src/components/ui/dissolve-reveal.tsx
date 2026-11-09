@@ -1,6 +1,6 @@
 import { useEffect, useRef, type HTMLAttributes } from 'react'
 import { dissolve } from '@/lib/effects/dissolve'
-import { isCoarsePointer } from '@/lib/effects/motion'
+import { isCoarsePointer, isMotionAllowed } from '@/lib/effects/motion'
 import { cn } from '@/lib/utils'
 
 /* Ключові блоки розчиняються по одному: наступний чекає, поки закінчиться попередній. */
@@ -20,6 +20,12 @@ export function DissolveReveal({ className, children, onRevealed, ...props }: Di
     const el = host.current
     const cv = canvas.current
     if (!el || !cv) return
+    /* Без руху прикривати блок нема чого: він видимий одразу, без очікування прокрутки. */
+    if (!isMotionAllowed()) {
+      cv.hidden = true
+      onRevealed?.()
+      return
+    }
     const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
     cv.width = 4
     cv.height = 4
