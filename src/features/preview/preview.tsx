@@ -1,5 +1,10 @@
 /* Сторінка перегляду компонентів. Лише в dev (/__preview), noindex, у production не потрапляє. */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { decode } from '@/lib/effects/decode'
+import { dissolve } from '@/lib/effects/dissolve'
+import { dither } from '@/lib/effects/dither'
+import { HOLO, type HologramModel } from '@/lib/effects/hologram'
+import { typeText } from '@/lib/effects/type-text'
 import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
@@ -10,6 +15,73 @@ import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
 import { Stat, Term } from '@/components/ui/term'
 import { TextLink } from '@/components/ui/text-link'
 import { Toggle } from '@/components/ui/toggle'
+
+const MODELS: HologramModel[] = ['page', 'calendar', 'nodes', 'box']
+
+function Effects() {
+  const decodeRef = useRef<HTMLHeadingElement>(null)
+  const typeRef = useRef<HTMLParagraphElement>(null)
+  const dissolveRef = useRef<HTMLCanvasElement>(null)
+  const ditherRef = useRef<HTMLCanvasElement>(null)
+  const holoRef = useRef<HTMLCanvasElement>(null)
+  const [model, setModel] = useState<HologramModel>('page')
+
+  const runDecode = () => decodeRef.current && decode(decodeRef.current, 'Зробимо майбутнє')
+  const runType = () => typeRef.current && void typeText(typeRef.current, '03 / зараз: перевіряємо макет')
+  const runDissolve = () => {
+    const cv = dissolveRef.current
+    if (cv) dissolve(cv, { color: getComputedStyle(document.documentElement).getPropertyValue('--fg') })
+  }
+
+  useEffect(() => {
+    const dark = () => document.documentElement.dataset.theme === 'dark'
+    const paintDither = () => ditherRef.current && dither(ditherRef.current, { dark: dark() })
+    paintDither()
+    const observer = new MutationObserver(paintDither)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const cv = holoRef.current
+    if (!cv) return
+    HOLO.mount(cv, model, 'vox', { base: 'grid', scan: true, noGlitch: true })
+    HOLO.start()
+  }, [model])
+
+  return (
+    <>
+      <Block title="decode">
+        <h3 ref={decodeRef} className="font-display text-h30">Зробимо майбутнє</h3>
+        <div className={row}><Button onClick={runDecode}>Повторити</Button></div>
+      </Block>
+      <Block title="typeText">
+        <p ref={typeRef} className="min-h-6 font-px text-px11 uppercase">03 / зараз: перевіряємо макет</p>
+        <div className={row}><Button onClick={runType}>Повторити</Button></div>
+      </Block>
+      <Block title="dissolve">
+        <div className="relative h-24 border border-line bg-surface p-space-4">
+          Блок під розчиненням
+          <canvas ref={dissolveRef} className="pointer-events-none absolute inset-0 size-full [image-rendering:pixelated]" />
+        </div>
+        <div className={row}><Button onClick={runDissolve}>Розчинити</Button></div>
+      </Block>
+      <Block title="dither">
+        <canvas ref={ditherRef} className="block h-[6px] w-full [image-rendering:pixelated]" />
+      </Block>
+      <Block title="hologram (одна на екран)">
+        <canvas ref={holoRef} key={model} className="h-[280px] w-full max-w-[360px] border border-line" />
+        <div className={row}>
+          {MODELS.map((m) => (
+            <Button key={m} size="sm" variant={m === model ? 'primary' : 'secondary'} onClick={() => setModel(m)}>
+              {m}
+            </Button>
+          ))}
+        </div>
+      </Block>
+    </>
+  )
+}
 
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -137,6 +209,8 @@ export function Preview() {
           </Alert>
         </div>
       </Block>
+
+      <Effects />
 
       <Block title="PixelIcon (23)">
         <div className="flex flex-wrap gap-space-4">
