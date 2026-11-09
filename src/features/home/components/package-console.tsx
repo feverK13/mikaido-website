@@ -11,7 +11,7 @@ import { PACKAGES_SECTION as C } from '../content'
 const surface = () => getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()
 
 type PackageConsoleProps = {
-  /** Викликається, коли партнер натиснув «Обговорити»: форма підставляє пакет. */
+  /** Викликається з id пакета, коли партнер натиснув «Обговорити»: форма підставляє пакет. */
   onDiscuss?: (name: string) => void
 }
 
@@ -40,7 +40,7 @@ function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: strin
         ))}
       </div>
       <div className="flex flex-wrap gap-[10px] border-t border-line px-[22px] pt-4 pb-[22px]">
-        <ButtonLink variant="primary" href={C.ctaHref} onClick={() => onDiscuss?.(pkg.name)}>
+        <ButtonLink variant="primary" href={C.ctaHref} onClick={() => onDiscuss?.(pkg.id)}>
           {C.discussCta} {pkg.name}
         </ButtonLink>
       </div>
