@@ -200,6 +200,7 @@ export const CONTACT_SECTION = {
     name: { label: "Ім'я", placeholder: 'Олена', error: 'Вкажіть, як до Вас звертатися' },
     phone: {
       label: 'Телефон',
+      prefix: '+380',
       placeholder: '+380 67 123 45 67',
       errorEmpty: 'Вкажіть номер телефону',
       errorFormat: 'Номер має 12 цифр: +380 і ще 9',
@@ -212,6 +213,7 @@ export const CONTACT_SECTION = {
       hint: 'Поле росте разом із текстом',
     },
     consent: "Погоджуюся з обробкою даних",
+    consentError: 'Потрібна Ваша згода на обробку даних',
     consentNote: "Лише для зв'язку щодо розмови",
     submit: 'Записатися на розмову',
   },

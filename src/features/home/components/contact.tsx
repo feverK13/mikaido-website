@@ -76,6 +76,7 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
   const [agree, setAgree] = useState(false)
   const [nameError, setNameError] = useState('')
   const [phoneError, setPhoneError] = useState('')
+  const [agreeError, setAgreeError] = useState('')
   const [sent, setSent] = useState(false)
   const form = useRef<HTMLFormElement>(null)
 
@@ -86,10 +87,13 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
     const phoneBad = !(digits.length === 12 && digits.startsWith('380'))
     setNameError(nameBad ? C.form.name.error : '')
     setPhoneError(phoneBad ? (digits ? C.form.phone.errorFormat : C.form.phone.errorEmpty) : '')
-    if (nameBad || phoneBad) {
+    const agreeBad = !agree
+    setAgreeError(agreeBad ? C.form.consentError : '')
+    if (nameBad || phoneBad || agreeBad) {
       requestAnimationFrame(() => form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus())
       return
     }
+    // TODO(step 8): real submit
     setSent(true)
   }
 
@@ -136,6 +140,7 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
               />
               <Field
                 label={C.form.phone.label}
+                prefix={C.form.phone.prefix}
                 inputMode="tel"
                 autoComplete="tel"
                 placeholder={C.form.phone.placeholder}
@@ -155,7 +160,14 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
               />
-              <Checkbox checked={agree} onChange={(e) => setAgree(e.target.checked)}>
+              <Checkbox
+                checked={agree}
+                error={agreeError}
+                onChange={(e) => {
+                  setAgree(e.target.checked)
+                  setAgreeError('')
+                }}
+              >
                 <span className="grid">
                   {C.form.consent}
                   <small className="text-t13 text-muted">{C.form.consentNote}</small>
