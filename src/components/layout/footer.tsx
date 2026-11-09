@@ -47,7 +47,7 @@ export function Footer({ onOpenCookieSettings, className }: FooterProps) {
       <div className="flex flex-wrap justify-between gap-3 border-t border-line pt-[14px] text-t13 text-muted">
         <span>{LEGAL.copyright}</span>
         <span className="flex flex-wrap gap-x-2">
-          <a href={LEGAL.privacyHref} className="text-fg no-underline">
+          <a href={LEGAL.privacyHref} className="text-fg no-underline pointer-coarse:inline-flex pointer-coarse:min-h-tap pointer-coarse:items-center">
             {LEGAL.privacyLabel}
           </a>
           <span aria-hidden="true">/</span>
