@@ -1,0 +1,164 @@
+/* Mikaido: тема для Tailwind CSS v4. Згенеровано з tokens.json дизайн-системи. */
+/* Підключення: @import "tailwindcss"; @import "./mikaido-theme.css"; */
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface2: #EFF1F4;
+  --line: #DCDFE5;
+  --line2: #C9CDD5;
+  --line3: #868B97;
+  --muted: #5D6170;
+  --fg: #111216;
+  --accent: #2C63B0;
+  --spark: #A8396F;
+  --tag: #E4E7EC;
+  --screen: #E6E8EC;
+  --iris-1: #5ECAD6;
+  --iris-2: #6B9FD4;
+  --iris-3: #D06AAE;
+  --iris-4: #E87BAD;
+  --og-bg: #0C0D10;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0C0D10;
+    --surface: #15161A;
+    --surface2: #1D1F24;
+    --line: #2A2D34;
+    --line2: #3A3E46;
+    --line3: #6E7380;
+    --muted: #9EA2AE;
+    --fg: #F5F6F8;
+    --accent: #8DB6EC;
+    --spark: #F29AC2;
+    --tag: #23262C;
+    --screen: #101216;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0C0D10;
+  --surface: #15161A;
+  --surface2: #1D1F24;
+  --line: #2A2D34;
+  --line2: #3A3E46;
+  --line3: #6E7380;
+  --muted: #9EA2AE;
+  --fg: #F5F6F8;
+  --accent: #8DB6EC;
+  --spark: #F29AC2;
+  --tag: #23262C;
+  --screen: #101216;
+  color-scheme: dark;
+}
+/* документи й друк завжди світлі */
+.paper {
+  --bg: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface2: #EFF1F4;
+  --line: #DCDFE5;
+  --line2: #C9CDD5;
+  --line3: #868B97;
+  --muted: #5D6170;
+  --fg: #111216;
+  --accent: #2C63B0;
+  --spark: #A8396F;
+  --tag: #E4E7EC;
+  --screen: #E6E8EC;
+  --iris-1: #5ECAD6;
+  --iris-2: #6B9FD4;
+  --iris-3: #D06AAE;
+  --iris-4: #E87BAD;
+  --og-bg: #0C0D10;
+  --bg: #FFFFFF; --surface2: #F1F3F6; --tag: #E9ECF0;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface2);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+  --color-line3: var(--line3);
+  --color-muted: var(--muted);
+  --color-fg: var(--fg);
+  --color-accent: var(--accent);
+  --color-spark: var(--spark);
+  --color-tag: var(--tag);
+  --color-screen: var(--screen);
+  --color-iris-1: var(--iris-1);
+  --color-iris-2: var(--iris-2);
+  --color-iris-3: var(--iris-3);
+  --color-iris-4: var(--iris-4);
+  --color-og-bg: var(--og-bg);
+  --font-display: "Unbounded", "Arial Black", sans-serif;
+  --font-body: "Wix Madefor Text", "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-body);
+  --font-px: "Departure Mono", ui-monospace, monospace;
+  --text-h48: 48px;
+  --text-h48--line-height: 1.05;
+  --text-h30: 30px;
+  --text-h30--line-height: 1.1;
+  --text-h24: 24px;
+  --text-h24--line-height: 1.15;
+  --text-h20: 20px;
+  --text-h20--line-height: 1.2;
+  --text-t18: 18px;
+  --text-t18--line-height: 1.55;
+  --text-t16: 16px;
+  --text-t16--line-height: 1.6;
+  --text-t14: 14px;
+  --text-t14--line-height: 1.5;
+  --text-t13: 13px;
+  --text-t13--line-height: 1.5;
+  --text-px11: 11px;
+  --text-px11--line-height: 1;
+  --text-px22: 22px;
+  --text-px22--line-height: 1;
+  --text-px33: 33px;
+  --text-px33--line-height: 1;
+  --text-px44: 44px;
+  --text-px44--line-height: 1;
+  --spacing-space-1: 4px;
+  --spacing-space-2: 8px;
+  --spacing-space-3: 12px;
+  --spacing-space-4: 16px;
+  --spacing-space-5: 24px;
+  --spacing-space-6: 48px;
+  --spacing-space-7: 80px;
+  --spacing-tap: 44px;
+  --radius-r0: 0px;
+  --radius-r2: 2px;
+  --radius-r3: 3px;
+  --shadow-modal: 0 18px 40px -16px rgba(0,0,0,0.35);
+  --shadow-paper: 0 18px 40px -24px rgba(0,0,0,0.35);
+  --ease-out-mk: cubic-bezier(.2,.7,.2,1);
+  --ease-inout-mk: cubic-bezier(.65,0,.35,1);
+}
+
+/* тривалості руху */
+:root {
+  --d-instant: 80ms; --d-fast: 160ms; --d-base: 240ms; --d-slow: 400ms; --d-dissolve: 650ms; --d-brand: 900ms;
+}
+@utility duration-instant { transition-duration: var(--d-instant); }
+@utility duration-fast { transition-duration: var(--d-fast); }
+@utility duration-base { transition-duration: var(--d-base); }
+@utility duration-slow { transition-duration: var(--d-slow); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+
+@font-face { font-family: "Unbounded"; src: url("/fonts/Unbounded.woff2") format("woff2"); font-weight: 200 900; font-display: swap; }
+@font-face { font-family: "Wix Madefor Text"; src: url("/fonts/WixMadeforText.woff2") format("woff2"); font-weight: 400 800; font-display: swap; }
+@font-face { font-family: "Departure Mono"; src: url("/fonts/DepartureMono-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+
+@layer base {
+  body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; font-synthesis: none; }
+  h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
