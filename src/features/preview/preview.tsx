@@ -7,7 +7,10 @@ import { HOLO, type HologramModel } from '@/lib/effects/hologram'
 import { typeText } from '@/lib/effects/type-text'
 import { Accordion } from '@/components/ui/accordion'
 import { Alert } from '@/components/ui/alert'
+import { CaseCard } from '@/components/ui/case-card'
 import { ConditionsTable } from '@/components/ui/conditions-table'
+import { PackageCard, PackageGrid } from '@/components/ui/package-card'
+import { PACKAGES, packageRows, type PackageId } from '@/config/packages'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
@@ -101,6 +104,7 @@ const row = 'flex flex-wrap items-center gap-space-3'
 export function Preview() {
   const [dark, setDark] = useState(false)
   const [text, setText] = useState('')
+  const [pkgSelected, setPkgSelected] = useState<PackageId>('business')
 
   useEffect(() => {
     const meta = document.createElement('meta')
@@ -165,6 +169,37 @@ export function Preview() {
             { id: 'b', question: 'Дуже довге питання, яке переноситься на кілька рядків у вузькому вікні телефону', answer: <span className="text-spark">[заповнити]</span> },
           ]}
         />
+      </Block>
+
+      <Block title="PackageCard">
+        <PackageGrid>
+          {PACKAGES.map((pkg) => (
+            <PackageCard
+              key={pkg.id}
+              name={pkg.name}
+              audience={pkg.audience}
+              price={pkg.price}
+              rows={packageRows(pkg)}
+              selected={pkg.id === pkgSelected}
+              onSelect={() => setPkgSelected(pkg.id)}
+            />
+          ))}
+        </PackageGrid>
+      </Block>
+
+      <Block title="CaseCard">
+        <div className="grid gap-space-4 md:grid-cols-2">
+          <CaseCard
+            url={<span className="text-spark">[заповнити]</span>}
+            title={<span className="text-spark">[заповнити]</span>}
+            tags={[<span key="t" className="text-spark">[заповнити]</span>]}
+            metrics={[
+              { value: <span className="text-spark">[заповнити]</span>, label: 'Заміри' },
+              { value: <span className="text-spark">[заповнити]</span>, label: 'Заміри' },
+              { value: <span className="text-spark">[заповнити]</span>, label: 'Заміри' },
+            ]}
+          />
+        </div>
       </Block>
 
       <Block title="IconButton">
