@@ -8,18 +8,21 @@ type FieldShellProps = {
   id: string
   label: string
   optional?: boolean
+  /** Мітка праворуч від підпису, px-11 (наприклад, +380). */
+  prefix?: string
   hint?: ReactNode
   error?: string
   children: ReactNode
   counter?: ReactNode
 }
 
-function FieldShell({ id, label, optional, hint, error, counter, children }: FieldShellProps) {
+function FieldShell({ id, label, optional, prefix, hint, error, counter, children }: FieldShellProps) {
   return (
     <div className="grid w-full gap-[6px]">
       <label htmlFor={id} className="flex justify-between text-t13 text-muted">
         {label}
         {optional && <span>необов'язково</span>}
+        {prefix && <span className="font-px text-px11 uppercase">{prefix}</span>}
       </label>
       {children}
       {(hint || counter) && !error && (
@@ -37,17 +40,19 @@ function FieldShell({ id, label, optional, hint, error, counter, children }: Fie
   )
 }
 
-type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> & {
+type FieldProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'id' | 'prefix'> & {
   label: string
   optional?: boolean
+  /** Мітка праворуч від підпису, px-11 (наприклад, +380). */
+  prefix?: string
   hint?: ReactNode
   error?: string
 }
 
-export function Field({ label, optional, hint, error, className, ...props }: FieldProps) {
+export function Field({ label, optional, prefix, hint, error, className, ...props }: FieldProps) {
   const id = useId()
   return (
-    <FieldShell id={id} label={label} optional={optional} hint={hint} error={error}>
+    <FieldShell id={id} label={label} optional={optional} prefix={prefix} hint={hint} error={error}>
       <input
         id={id}
         aria-invalid={error ? true : undefined}
