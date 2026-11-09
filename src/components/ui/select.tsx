@@ -36,12 +36,19 @@ export function Select({ label, options, value, onChange, className }: SelectPro
     return () => document.removeEventListener('pointerdown', onPointer)
   }, [open])
 
-  /* Нижня шторка до 860 px: сторінка під нею не прокручується. */
+  /* Нижня шторка до 860 px: сторінка під нею не прокручується. Блокування знімається при закритті,
+     розмонтуванні й коли вікно стає ширшим за 860 px (там список випадає під полем). */
   useEffect(() => {
-    if (!open || !matchMedia('(max-width: 860px)').matches) return
+    if (!open) return
+    const query = matchMedia('(max-width: 860px)')
     const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const apply = () => {
+      document.body.style.overflow = query.matches ? 'hidden' : previous
+    }
+    apply()
+    query.addEventListener('change', apply)
     return () => {
+      query.removeEventListener('change', apply)
       document.body.style.overflow = previous
     }
   }, [open])
