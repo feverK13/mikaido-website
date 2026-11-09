@@ -1,0 +1,63 @@
+/* Головна кнопка A: скошений кут 12 × 5 px, при наведенні 20 × 8 px і шаховий трикутник ірису.
+   Еталон: docs/design-system/components/Button/README.md */
+.btn-a {
+  position: relative;
+  isolation: isolate;
+  min-height: var(--spacing-tap);
+  border: 0;
+  cursor: pointer;
+  color: var(--bg);
+  background: var(--fg);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 5px, 100% 100%, 0 100%);
+  transition:
+    clip-path var(--d-fast) steps(3, end),
+    transform var(--d-instant) linear;
+}
+
+.btn-a::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: repeating-conic-gradient(var(--iris-1) 0 25%, var(--iris-3) 0 50%) 0 0 / 4px 4px;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  opacity: 0;
+  transition: opacity var(--d-fast) steps(2, end);
+}
+
+.btn-a:active {
+  transform: translateY(1px);
+}
+
+.btn-a:not(:disabled):active,
+.btn-a:not(:disabled):focus-visible {
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+
+.btn-a:not(:disabled):active::before,
+.btn-a:not(:disabled):focus-visible::before {
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+}
+
+.btn-a:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px var(--accent),
+    inset 0 0 0 3px var(--bg);
+}
+
+@media (hover: hover) {
+  .btn-a:not(:disabled):hover {
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 8px, 100% 100%, 0 100%);
+  }
+
+  .btn-a:not(:disabled):hover::before {
+    width: 20px;
+    height: 20px;
+    opacity: 1;
+  }
+}
