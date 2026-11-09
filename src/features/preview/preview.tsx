@@ -9,6 +9,8 @@ import { Alert } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
+import { Footer } from '@/components/layout/footer'
+import { Header } from '@/components/layout/header'
 import { IconButton } from '@/components/ui/icon-button'
 import { ICONS, type IconName } from '@/components/ui/pixel-icon/icons'
 import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
@@ -133,6 +135,14 @@ export function Preview() {
           <Button variant="ghost">Третьорядна</Button>
           <Button disabled>Вимкнено</Button>
         </div>
+      </Block>
+
+      <Block title="Header">
+        <Header className="static" current="#pakety" />
+      </Block>
+
+      <Block title="Footer">
+        <Footer />
       </Block>
 
       <Block title="IconButton">
