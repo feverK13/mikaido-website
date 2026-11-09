@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
+import { Cases } from './components/cases'
 import { Hero } from './components/hero'
 import { Path } from './components/path'
 
@@ -11,6 +12,7 @@ export function HomePage() {
       <main>
         <Hero />
         <Path />
+        <Cases />
       </main>
       <Footer />
     </>

@@ -8,6 +8,10 @@ type CaseCardProps = {
   url: ReactNode
   /** Справжній скріншот роботи, 2×. Поки його немає, показується заглушка зі штрихуванням. */
   screenshot?: { src: string; alt: string }
+  /** Підпис заглушки, поки скріншота немає. */
+  placeholderLabel?: ReactNode
+  /** Номер кейса над назвою, px-11. */
+  label?: ReactNode
   title: ReactNode
   tags?: ReactNode[]
   metrics?: CaseMetric[]
@@ -15,7 +19,7 @@ type CaseCardProps = {
 }
 
 /** Картка кейсу: рамка браузера, скріншот 16:9, опис, заміри. Назву, задачу, заміри й відгук публікуємо лише з письмової згоди власника. */
-export function CaseCard({ url, screenshot, title, tags = [], metrics = [], className }: CaseCardProps) {
+export function CaseCard({ url, screenshot, placeholderLabel = 'Скріншот', label, title, tags = [], metrics = [], className }: CaseCardProps) {
   return (
     <article className={cn('grid grid-cols-[minmax(0,1fr)] border border-fg bg-surface', className)}>
       <div className="flex items-center gap-3 border-b border-fg px-3 py-[10px]">
@@ -36,11 +40,12 @@ export function CaseCard({ url, screenshot, title, tags = [], metrics = [], clas
           className="grid aspect-video place-items-center bg-[repeating-linear-gradient(135deg,var(--surface2)_0_10px,var(--surface)_10px_20px)]"
         >
           <span className="border border-dashed border-line2 bg-surface px-[10px] py-[6px] font-px text-px11 uppercase text-muted">
-            Скріншот
+            {placeholderLabel}
           </span>
         </div>
       )}
       <div className="grid gap-[10px] border-t border-fg p-4">
+        {label && <span className="font-px text-px11 text-muted">{label}</span>}
         <b className="font-display text-t18 font-medium">{title}</b>
         {tags.length > 0 && (
           <ul className="flex flex-wrap gap-[6px]">
