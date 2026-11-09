@@ -4,6 +4,7 @@ import { Cases } from './components/cases'
 import { Hero } from './components/hero'
 import { Packages } from './components/packages'
 import { Path } from './components/path'
+import { Process } from './components/process'
 
 /** Головна: шапка, секції за макетом docs/reference/mikaido-home.html, підвал. */
 export function HomePage() {
@@ -15,6 +16,7 @@ export function HomePage() {
         <Path />
         <Cases />
         <Packages />
+        <Process />
       </main>
       <Footer />
     </>
