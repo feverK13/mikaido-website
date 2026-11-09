@@ -5,7 +5,7 @@ import { dither } from '@/lib/effects/dither'
 import { cn } from '@/lib/utils'
 import { BrandLink } from './brand-link'
 
-const linkClass = 'block py-[3px] text-t14 text-fg no-underline pointer-coarse:pt-3 pointer-coarse:pb-[10px]'
+const linkClass = 'block py-[3px] text-t14 text-fg no-underline pointer-coarse:pt-3 pointer-coarse:pb-[11px]'
 
 type FooterProps = {
   /** Відкриває вікно налаштувань cookies (те саме, що плашка). */
