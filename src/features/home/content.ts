@@ -150,6 +150,11 @@ export const SUPPORT_SECTION = {
   note: 'Мінімум 3 місяці. −5% за квартал наперед, −10% за рік.',
 }
 
+export const MOBILE_BAR = {
+  secondary: { label: 'Пакети', href: '#pakety' },
+  primary: { label: 'Записатися', href: '#rozmova' },
+}
+
 export const FAQ_SECTION = {
   tab: '/08 Питання',
   title: 'Часті питання',
