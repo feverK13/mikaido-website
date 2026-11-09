@@ -1,0 +1,24 @@
+/* Піксельний сплеск кнопки A (lib/effects/burst.ts) */
+.burst {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  pointer-events: none;
+  z-index: 50;
+  background: var(--c);
+  animation: burst 360ms steps(4, end) forwards;
+}
+
+@keyframes burst {
+  to {
+    transform: translate(var(--dx), var(--dy));
+    opacity: 0;
+  }
+}
+
+/* Миготіння позначки «зараз» (Term.stat) */
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
