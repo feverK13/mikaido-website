@@ -20,7 +20,7 @@ const PROFILES = [
     options: { viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true },
   },
 ]
-const EFFECT_SECTIONS = ['decode', 'typeText', 'dissolve', 'dither', 'hologram']
+const EFFECT_SECTIONS = ['decode', 'typeText', 'dissolve', 'dither', 'hologram', 'Select', 'Steps']
 const INTERACTIVE =
   'button:not([disabled]), a[href], input, textarea, [role=switch]:not([disabled])'
 
@@ -107,6 +107,7 @@ try {
               await section.screenshot({ path: `${OUT}/${name}-after-click.png` })
               count++
             }
+            await page.keyboard.press('Escape')
             await page.mouse.move(0, 0)
             await page.waitForTimeout(200)
           }

@@ -10,6 +10,9 @@ import { Alert } from '@/components/ui/alert'
 import { CaseCard } from '@/components/ui/case-card'
 import { ConditionsTable } from '@/components/ui/conditions-table'
 import { PackageCard, PackageGrid } from '@/components/ui/package-card'
+import { Select } from '@/components/ui/select'
+import { Steps } from '@/components/ui/steps'
+import { PROCESS_STEPS } from '@/config/process'
 import { PACKAGES, packageRows, type PackageId } from '@/config/packages'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
@@ -105,6 +108,7 @@ export function Preview() {
   const [dark, setDark] = useState(false)
   const [text, setText] = useState('')
   const [pkgSelected, setPkgSelected] = useState<PackageId>('business')
+  const [step, setStep] = useState(0)
 
   useEffect(() => {
     const meta = document.createElement('meta')
@@ -169,6 +173,34 @@ export function Preview() {
             { id: 'b', question: 'Дуже довге питання, яке переноситься на кілька рядків у вузькому вікні телефону', answer: <span className="text-spark">[заповнити]</span> },
           ]}
         />
+      </Block>
+
+      <Block title="Select">
+        <div className="max-w-[360px]">
+          <Select
+            label="Пакет"
+            value={pkgSelected}
+            onChange={(v) => setPkgSelected(v as PackageId)}
+            options={[
+              ...PACKAGES.map((p) => ({ value: p.id, label: p.name, hint: p.term })),
+            ]}
+          />
+        </div>
+        <div className="mb-[200px]" />
+      </Block>
+
+      <Block title="Steps">
+        <div className="grid gap-space-4">
+          <Steps items={PROCESS_STEPS} current={2} />
+          <div className={row}>
+            {[0, 1, 2, 3, 4, 5].map((n) => (
+              <Button key={n} size="sm" onClick={() => setStep(n)}>
+                {n === 5 ? 'Усе готово' : `Етап ${n + 1}`}
+              </Button>
+            ))}
+          </div>
+          <Steps items={PROCESS_STEPS} current={step} />
+        </div>
       </Block>
 
       <Block title="PackageCard">
