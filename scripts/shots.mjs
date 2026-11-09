@@ -1,5 +1,7 @@
 /* Знімає скріншоти компонентів зі сторінки /__preview для звірки з еталоном.
-   Запуск: npm run shots. Результат: test-results/screens/.
+   Запуск: npm run shots. Лише один компонент: npm run shots -- Select (збіг за назвою секції,
+   без урахування регістру). Результат: test-results/screens/.
+   Чотири комбінації тема x ширина йдуть паралельно в одному Chromium, dev-сервер один.
    Теми: light, dark. Ширини: 1280 (миша) і 390 (мобільний профіль із touch).
    Стани: default, hover, active (миша затиснута), focus-visible (через Tab), disabled і error
    видно на default-знімку секції. Для ефектів рух увімкнено (reducedMotion: no-preference). */
@@ -24,7 +26,9 @@ const EFFECT_SECTIONS = ['decode', 'typeText', 'dissolve', 'dither', 'hologram',
 const INTERACTIVE =
   'button:not([disabled]), a[href], input, textarea, [role=switch]:not([disabled])'
 
-rmSync(OUT, { recursive: true, force: true })
+const FILTER = process.argv[2]?.toLowerCase()
+
+if (!FILTER) rmSync(OUT, { recursive: true, force: true })
 mkdirSync(OUT, { recursive: true })
 
 const server = await createServer({ server: { port: PORT, strictPort: true }, logLevel: 'error' })
@@ -54,9 +58,9 @@ async function pressTabTo(page, handle) {
   return false
 }
 
-try {
-  for (const theme of THEMES) {
-    for (const profile of PROFILES) {
+async function runCombo(theme, profile) {
+  {
+    {
       const context = await browser.newContext({
         ...profile.options,
         colorScheme: theme,
@@ -75,6 +79,7 @@ try {
       for (let s = 0; s < total; s++) {
         const section = sections.nth(s)
         const title = (await section.locator('h2').first().textContent()) ?? ''
+        if (FILTER && !title.toLowerCase().includes(FILTER)) continue
         const base = `${theme}-${profile.name}-${String(s).padStart(2, '0')}-${slug(title)}`
         await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme)
         await section.scrollIntoViewIfNeeded()
@@ -125,6 +130,10 @@ try {
       await context.close()
     }
   }
+}
+
+try {
+  await Promise.all(THEMES.flatMap((theme) => PROFILES.map((profile) => runCombo(theme, profile))))
 } finally {
   await browser.close()
   await server.close()
