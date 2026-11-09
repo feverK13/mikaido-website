@@ -144,8 +144,8 @@ export function Process() {
             "before:absolute before:top-[10px] before:right-[10px] before:left-[10px] before:h-[2px] before:bg-[repeating-linear-gradient(90deg,var(--line2)_0_6px,transparent_6px_10px)] before:content-['']",
             'max-[860px]:before:right-auto max-[860px]:before:bottom-[10px] max-[860px]:before:h-auto max-[860px]:before:w-[2px] max-[860px]:before:bg-[repeating-linear-gradient(180deg,var(--line2)_0_6px,transparent_6px_10px)]',
             /* заповнена частина рейки */
-            "after:absolute after:top-[10px] after:left-[10px] after:h-[2px] after:w-[calc(80%*var(--p))] after:bg-fg after:transition-[width] after:duration-[1400ms] after:ease-[steps(14,end)] after:content-['']",
-            'max-[860px]:after:h-[calc((100%-20px)*var(--p))] max-[860px]:after:w-[2px] max-[860px]:after:transition-[height]',
+            "after:absolute after:top-[10px] after:left-[10px] after:h-[2px] after:w-[80%] after:origin-left after:scale-x-[var(--p)] after:bg-fg after:transition-[scale] after:duration-[1400ms] after:ease-[steps(14,end)] after:content-['']",
+            'max-[860px]:after:h-[calc(100%-20px)] max-[860px]:after:w-[2px] max-[860px]:after:origin-top max-[860px]:after:scale-x-100 max-[860px]:after:scale-y-[var(--p)]',
           )}
         >
           {PROCESS_STEPS.map((step, i) => {
