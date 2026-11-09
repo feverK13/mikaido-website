@@ -5,7 +5,9 @@ import { dissolve } from '@/lib/effects/dissolve'
 import { dither } from '@/lib/effects/dither'
 import { HOLO, type HologramModel } from '@/lib/effects/hologram'
 import { typeText } from '@/lib/effects/type-text'
+import { Accordion } from '@/components/ui/accordion'
 import { Alert } from '@/components/ui/alert'
+import { ConditionsTable } from '@/components/ui/conditions-table'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
@@ -143,6 +145,26 @@ export function Preview() {
 
       <Block title="Footer">
         <Footer />
+      </Block>
+
+      <Block title="ConditionsTable">
+        <ConditionsTable
+          head={['Сервіс', 'Навіщо']}
+          rows={[
+            [<>Хостинг <span className="text-spark">[назва]</span></>, 'Сайт працює на його серверах'],
+            [<>Сповіщення про заявку <span className="text-spark">[сервіс]</span></>, 'Щоб ми швидко побачили Вашу заявку'],
+            [<>Аналітика <span className="text-spark">[сервіс]</span></>, 'Статистика відвідувань, лише за згодою'],
+          ]}
+        />
+      </Block>
+
+      <Block title="Accordion">
+        <Accordion
+          items={[
+            { id: 'a', question: <span className="text-spark">[заповнити]</span>, answer: <span className="text-spark">[заповнити]</span> },
+            { id: 'b', question: 'Дуже довге питання, яке переноситься на кілька рядків у вузькому вікні телефону', answer: <span className="text-spark">[заповнити]</span> },
+          ]}
+        />
       </Block>
 
       <Block title="IconButton">
