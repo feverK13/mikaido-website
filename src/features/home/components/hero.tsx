@@ -3,6 +3,7 @@ import { DissolveReveal } from '@/components/ui/dissolve-reveal'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Section } from '@/components/layout/section'
 import { useHologram } from '@/hooks/use-hologram'
+import { trackEvent } from '@/lib/analytics'
 import { decode } from '@/lib/effects/decode'
 import { HERO } from '../content'
 
@@ -29,7 +30,11 @@ export function Hero() {
           </h1>
           <p className="max-w-[44ch] text-t18 text-muted max-md:text-t16">{HERO.lead}</p>
           <div className="flex flex-wrap items-center gap-[10px]">
-            <ButtonLink variant="primary" href={HERO.primaryCta.href}>
+            <ButtonLink
+              variant="primary"
+              href={HERO.primaryCta.href}
+              onClick={() => trackEvent('cta_click', { location: 'hero' })}
+            >
               {HERO.primaryCta.label}
             </ButtonLink>
             <ButtonLink href={HERO.secondaryCta.href}>{HERO.secondaryCta.label}</ButtonLink>

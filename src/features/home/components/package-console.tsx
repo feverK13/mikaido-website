@@ -1,16 +1,20 @@
 import { useRef, useState, type KeyboardEvent } from 'react'
 import { ButtonLink } from '@/components/ui/button-link'
 import { Term } from '@/components/ui/term'
-import { PACKAGES, type PackageData } from '@/config/packages'
+import { PK, type PackageData } from '@/content/packages'
 import { useHologram } from '@/hooks/use-hologram'
 import { dissolve } from '@/lib/effects/dissolve'
 import { isMotionAllowed } from '@/lib/effects/motion'
+import { trackEvent } from '@/lib/analytics'
 import { cn } from '@/lib/utils'
 import { PACKAGES_SECTION as C } from '../content'
 
 const surface = () => getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()
 
 type PackageConsoleProps = {
+  /** Індекс вибраного пакета й зміна вибору (стан живе в секції, щоб посилання на повні умови знало вибір). */
+  current: number
+  onCurrentChange: (index: number) => void
   /** Викликається з id пакета, коли партнер натиснув «Обговорити»: форма підставляє пакет. */
   onDiscuss?: (name: string) => void
 }
@@ -18,7 +22,7 @@ type PackageConsoleProps = {
 function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: string) => void }) {
   const rows: [string, string][] = [
     [C.detailRows.scope, pkg.scope],
-    [C.detailRows.key, C.extras[pkg.id].key],
+    [C.detailRows.key, pkg.key],
     [C.detailRows.revisions, pkg.revisions],
     [C.detailRows.pulse, pkg.pulse],
     [C.detailRows.payment, pkg.payment],
@@ -40,7 +44,10 @@ function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: strin
         ))}
       </div>
       <div className="flex flex-wrap gap-[10px] border-t border-line px-[22px] pt-4 pb-[22px]">
-        <ButtonLink variant="primary" href={C.ctaHref} onClick={() => onDiscuss?.(pkg.id)}>
+        <ButtonLink variant="primary" href={C.ctaHref} onClick={() => {
+            trackEvent('select_package', { package: pkg.id, location: 'console_discuss' })
+            onDiscuss?.(pkg.id)
+          }}>
           {C.discussCta} {pkg.name}
         </ButtonLink>
       </div>
@@ -49,20 +56,20 @@ function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: strin
 }
 
 /** Ігровий блок «Пакети»: меню як у консолі (стрілки, дотик) і картка пакета, що змінюється через розчинення. Голограма змінюється разом із пакетом. */
-export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
-  const [current, setCurrent] = useState(1)
+export function PackageConsole({ current, onCurrentChange, onDiscuss }: PackageConsoleProps) {
   const [swapping, setSwapping] = useState(false)
   const [flash, setFlash] = useState<number | null>(null)
   const swap = useRef<HTMLCanvasElement>(null)
   const options = useRef<(HTMLButtonElement | null)[]>([])
-  const hologram = useHologram(C.extras[PACKAGES[current].id].model)
+  const hologram = useHologram(C.models[PK[current].id])
 
   const pick = (index: number, withFlash: boolean) => {
     if (index === current || swapping) return
+    trackEvent('select_package', { package: PK[index].id, location: 'console_menu' })
     if (withFlash && isMotionAllowed()) setFlash(index)
     const cv = swap.current
     if (!cv) {
-      setCurrent(index)
+      onCurrentChange(index)
       return
     }
     setSwapping(true)
@@ -72,7 +79,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
       color: surface(),
       cell: 6,
       done: () => {
-        setCurrent(index)
+        onCurrentChange(index)
         requestAnimationFrame(() =>
           dissolve(cv, { dur: 200, dir: 1, color: surface(), cell: 6, done: () => setSwapping(false) }),
         )
@@ -83,7 +90,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
   const onKeyDown = (event: KeyboardEvent, index: number) => {
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return
     event.preventDefault()
-    const next = (index + (event.key === 'ArrowDown' ? 1 : PACKAGES.length - 1)) % PACKAGES.length
+    const next = (index + (event.key === 'ArrowDown' ? 1 : PK.length - 1)) % PK.length
     options.current[next]?.focus()
     pick(next, false)
   }
@@ -96,7 +103,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
         className="grid content-start gap-[2px] border-r border-fg bg-screen px-[18px] py-5 min-[901px]:grid-rows-[auto_repeat(4,auto)_auto_1fr] max-[900px]:border-r-0 max-[900px]:border-b"
       >
         <div aria-hidden="true" className="pb-3 pl-[34px] font-px text-px11 uppercase text-muted">{C.menuTitle}</div>
-        {PACKAGES.map((pkg, i) => (
+        {PK.map((pkg, i) => (
           <button
             key={pkg.id}
             ref={(el) => {
@@ -133,7 +140,7 @@ export function PackageConsole({ onDiscuss }: PackageConsoleProps) {
         </div>
       </div>
       <div className="relative grid" aria-live="polite">
-        <Detail key={current} pkg={PACKAGES[current]} onDiscuss={onDiscuss} />
+        <Detail key={current} pkg={PK[current]} onDiscuss={onDiscuss} />
         <canvas
           ref={swap}
           aria-hidden="true"

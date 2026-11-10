@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Section, SectionHeader } from '@/components/layout/section'
 import { DissolveReveal } from '@/components/ui/dissolve-reveal'
 import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
+import { TextLink } from '@/components/ui/text-link'
 import { useTheme } from '@/hooks/use-theme'
 import { drawGlow } from '@/lib/effects/glow'
 import { isMotionAllowed } from '@/lib/effects/motion'
@@ -71,6 +72,9 @@ export function Terms() {
           ))}
         </ul>
       </div>
+      <TextLink href={C.moreHref} className="justify-self-start">
+        {C.moreLabel}
+      </TextLink>
     </Section>
   )
 }

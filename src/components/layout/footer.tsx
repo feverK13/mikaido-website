@@ -30,7 +30,7 @@ export function Footer({ onOpenCookieSettings, className }: FooterProps) {
       <canvas ref={canvas} aria-hidden="true" className="block h-[6px] w-full [image-rendering:pixelated]" />
       <div className="grid grid-cols-2 gap-6 min-[761px]:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
-          <BrandLink href="#top" />
+          <BrandLink href="/" />
           <p className="mt-3 text-t13 text-muted">{SLOGAN}</p>
         </div>
         {FOOTER_COLUMNS.map((column) => (

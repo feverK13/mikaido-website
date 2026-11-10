@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { usePageMeta } from '@/hooks/use-page-meta'
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { NAV_ITEMS } from '@/config/site'
+import { PK } from '@/content/packages'
+import { useLocation } from '@/lib/router'
 import { Cases } from './components/cases'
 import { Contact, UNKNOWN_PACKAGE } from './components/contact'
 import { Faq } from './components/faq'
@@ -10,7 +13,6 @@ import { MobileBar } from './components/mobile-bar'
 import { Packages } from './components/packages'
 import { Path } from './components/path'
 import { Process } from './components/process'
-import { Support } from './components/support'
 import { Terms } from './components/terms'
 import { SKIP_LINK } from './content'
 
@@ -19,7 +21,8 @@ function useCurrentSection() {
   const [current, setCurrent] = useState<string>()
   useEffect(() => {
     const observers = NAV_ITEMS.map((item) => {
-      const el = document.querySelector(item.href)
+      const id = item.href.split('#')[1]
+      const el = id ? document.getElementById(id) : null
       if (!el) return undefined
       const observer = new IntersectionObserver(
         (entries) => {
@@ -42,7 +45,12 @@ type HomePageProps = {
 
 /** Головна: шапка, секції за макетом docs/reference/mikaido-home.html, підвал. */
 export function HomePage({ onOpenCookieSettings }: HomePageProps) {
-  const [packageValue, setPackageValue] = useState(UNKNOWN_PACKAGE)
+  usePageMeta({ title: 'Mikaido' })
+  const { search } = useLocation()
+  const [packageValue, setPackageValue] = useState(() => {
+    const wanted = new URLSearchParams(search).get('pkg')
+    return PK.some((p) => p.id === wanted) ? (wanted as string) : UNKNOWN_PACKAGE
+  })
   const current = useCurrentSection()
   return (
     <>
@@ -60,7 +68,6 @@ export function HomePage({ onOpenCookieSettings }: HomePageProps) {
         <Packages onDiscuss={setPackageValue} />
         <Process />
         <Terms />
-        <Support />
         <Faq />
         <Contact packageValue={packageValue} onPackageChange={setPackageValue} />
       </main>

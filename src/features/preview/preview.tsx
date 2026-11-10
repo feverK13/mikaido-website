@@ -13,7 +13,7 @@ import { PackageCard, PackageGrid } from '@/components/ui/package-card'
 import { Select } from '@/components/ui/select'
 import { Steps } from '@/components/ui/steps'
 import { PROCESS_STEPS } from '@/config/process'
-import { PACKAGES, packageRows, type PackageId } from '@/config/packages'
+import { PK, packageRows, type PackageId } from '@/content/packages'
 import { Button } from '@/components/ui/button'
 import { Checkbox, Radio } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
@@ -196,7 +196,7 @@ export function Preview() {
             value={pkgSelected}
             onChange={(v) => setPkgSelected(v as PackageId)}
             options={[
-              ...PACKAGES.map((p) => ({ value: p.id, label: p.name, hint: p.term })),
+              ...PK.map((p) => ({ value: p.id, label: p.name, hint: p.term })),
             ]}
           />
         </div>
@@ -219,7 +219,7 @@ export function Preview() {
 
       <Block title="PackageCard">
         <PackageGrid>
-          {PACKAGES.map((pkg) => (
+          {PK.map((pkg) => (
             <PackageCard
               key={pkg.id}
               name={pkg.name}

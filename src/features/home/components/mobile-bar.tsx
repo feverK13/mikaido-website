@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ButtonLink } from '@/components/ui/button-link'
+import { trackEvent } from '@/lib/analytics'
 import { cn } from '@/lib/utils'
 import { MOBILE_BAR } from '../content'
 
@@ -34,7 +35,12 @@ export function MobileBar() {
       <ButtonLink href={MOBILE_BAR.secondary.href} className="min-h-12 flex-1">
         {MOBILE_BAR.secondary.label}
       </ButtonLink>
-      <ButtonLink variant="primary" href={MOBILE_BAR.primary.href} className="min-h-12 flex-1">
+      <ButtonLink
+        variant="primary"
+        href={MOBILE_BAR.primary.href}
+        className="min-h-12 flex-1"
+        onClick={() => trackEvent('cta_click', { location: 'mobile_bar' })}
+      >
         {MOBILE_BAR.primary.label}
       </ButtonLink>
     </div>

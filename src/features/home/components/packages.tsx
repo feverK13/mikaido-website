@@ -1,37 +1,22 @@
+import { useState } from 'react'
 import { Section, SectionHeader } from '@/components/layout/section'
-import { Accordion } from '@/components/ui/accordion'
-import { ConditionsTable } from '@/components/ui/conditions-table'
 import { DissolveReveal } from '@/components/ui/dissolve-reveal'
 import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
-import { PACKAGES } from '@/config/packages'
+import { TextLink } from '@/components/ui/text-link'
+import { PK } from '@/content/packages'
 import { PACKAGES_SECTION as C } from '../content'
 import { PackageConsole } from './package-console'
 
-const L = C.compare.labels
-const head = [
-  <span key="corner" className="sr-only">
-    {C.compare.cornerLabel}
-  </span>,
-  ...PACKAGES.map((p) => p.name),
-]
-const rows = [
-  [L.price, ...PACKAGES.map((p) => p.price)],
-  [L.audience, ...PACKAGES.map((p) => p.audience)],
-  [L.scope, ...PACKAGES.map((p) => p.scope)],
-  [L.term, ...PACKAGES.map((p) => p.term)],
-  [L.revisions, ...C.compare.revisions],
-  [L.pulse, ...PACKAGES.map((p) => p.pulse)],
-]
+type PackagesProps = { onDiscuss?: (id: string) => void }
 
-type PackagesProps = { onDiscuss?: (name: string) => void }
-
-/** Секція «Пакети»: меню-консоль із карткою пакета, список того, що є завжди, і порівняльна таблиця в акордеоні. */
+/** Секція «Пакети»: меню-консоль із карткою пакета, список того, що є завжди, і посилання на повні умови з вибраним пакетом. */
 export function Packages({ onDiscuss }: PackagesProps) {
+  const [current, setCurrent] = useState(1)
   return (
     <Section id="pakety">
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
       <DissolveReveal>
-        <PackageConsole onDiscuss={onDiscuss} />
+        <PackageConsole current={current} onCurrentChange={setCurrent} onDiscuss={onDiscuss} />
       </DissolveReveal>
       <ul className="mt-4 flex flex-wrap gap-x-[22px] gap-y-[10px] text-t14 text-muted">
         {C.always.map((item) => (
@@ -41,16 +26,9 @@ export function Packages({ onDiscuss }: PackagesProps) {
           </li>
         ))}
       </ul>
-      <Accordion
-        className="mt-4 border-t-0 [&_button]:border-b-0"
-        items={[
-          {
-            id: 'compare',
-            question: C.compare.title,
-            answer: <ConditionsTable head={head} rows={rows} numericColumns={[1, 2, 3, 4]} />,
-          },
-        ]}
-      />
+      <TextLink href={`${C.fullHref}?pkg=${PK[current].id}#tablytsia`} className="justify-self-start">
+        {C.fullLabel}
+      </TextLink>
     </Section>
   )
 }

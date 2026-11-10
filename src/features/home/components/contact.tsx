@@ -1,71 +1,25 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { Section } from '@/components/layout/section'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, TextareaField } from '@/components/ui/field'
 import { Select, type SelectOption } from '@/components/ui/select'
-import { PACKAGES } from '@/config/packages'
-import { isMotionAllowed } from '@/lib/effects/motion'
-import { typeText } from '@/lib/effects/type-text'
+import { PK } from '@/content/packages'
+import { navigate } from '@/lib/router'
+import { trackEvent } from '@/lib/analytics'
 import { CONTACT_SECTION as C } from '../content'
 
 export const UNKNOWN_PACKAGE = 'unknown'
 
 const options: SelectOption[] = [
   { value: UNKNOWN_PACKAGE, label: C.form.packageUnknown },
-  ...PACKAGES.map((p) => ({ value: p.id, label: p.name, hint: p.term })),
+  ...PK.map((p) => ({ value: p.id, label: p.name, hint: p.term })),
 ]
 
 type ContactProps = {
   /** Пакет, обраний у блоці «Пакети» або тут. */
   packageValue: string
   onPackageChange: (value: string) => void
-}
-
-/** Відповідь після заявки друкується терміналом, як у макеті. */
-function SentMessage() {
-  const rows = useRef<(HTMLSpanElement | null)[]>([])
-  const [cursor, setCursor] = useState(false)
-
-  useEffect(() => {
-    let alive = true
-    void (async () => {
-      for (let i = 0; i < C.sent.length; i++) {
-        const el = rows.current[i]
-        if (!el || !alive) return
-        if (isMotionAllowed()) {
-          await typeText(el, C.sent[i].v, { speed: 24 })
-          await new Promise((r) => setTimeout(r, 260))
-        } else {
-          el.textContent = C.sent[i].v
-        }
-      }
-      if (alive && isMotionAllowed()) setCursor(true)
-    })()
-    return () => {
-      alive = false
-    }
-  }, [])
-
-  return (
-    <div role="status" className="grid gap-[10px] font-px text-px11 leading-[1.8] uppercase">
-      {C.sent.map((row, i) => (
-        <div key={row.k}>
-          <span className="mr-[10px] text-accent">{row.k}</span>
-          <span
-            ref={(el) => {
-              rows.current[i] = el
-            }}
-          >
-            {row.v}
-          </span>
-        </div>
-      ))}
-      {cursor && (
-        <span aria-hidden="true" className="inline-block h-[1.05em] w-[0.55em] animate-[blink_1.06s_steps(1)_infinite] bg-fg" />
-      )}
-    </div>
-  )
 }
 
 /** Секція «Розмова»: три кроки після заявки й форма з мінімумом полів. Заявка поки нікуди не надсилається. */
@@ -77,7 +31,6 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
   const [nameError, setNameError] = useState('')
   const [phoneError, setPhoneError] = useState('')
   const [agreeError, setAgreeError] = useState('')
-  const [sent, setSent] = useState(false)
   const form = useRef<HTMLFormElement>(null)
 
   const onSubmit = (event: FormEvent) => {
@@ -94,7 +47,8 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
       return
     }
     // TODO(step 8): real submit
-    setSent(true)
+    trackEvent('generate_lead', { package: packageValue })
+    navigate('/dyakuyemo')
   }
 
   return (
@@ -123,10 +77,6 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
           onSubmit={onSubmit}
           className="grid gap-4 border border-fg bg-surface p-[clamp(18px,3vw,28px)]"
         >
-          {sent ? (
-            <SentMessage />
-          ) : (
-            <>
               <Field
                 label={C.form.name.label}
                 autoComplete="name"
@@ -176,8 +126,6 @@ export function Contact({ packageValue, onPackageChange }: ContactProps) {
               <Button variant="primary" size="lg" type="submit" className="justify-self-start">
                 {C.form.submit}
               </Button>
-            </>
-          )}
         </form>
       </div>
     </Section>

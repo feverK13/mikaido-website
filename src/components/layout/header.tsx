@@ -28,7 +28,7 @@ export function Header({ current, className }: HeaderProps) {
     <>
       <header className={cn('sticky top-0 z-30 border-b border-line bg-bg', className)}>
         <Container className="flex items-center justify-between gap-4 py-[14px]">
-          <BrandLink href="#top" />
+          <BrandLink href="/" />
           <nav aria-label="Головна навігація" className="flex gap-1 max-[860px]:hidden">
             {NAV_ITEMS.map((item) => (
               <a

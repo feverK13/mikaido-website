@@ -4,13 +4,13 @@
 export type NavItem = { label: string; href: string }
 
 export const NAV_ITEMS: NavItem[] = [
-  { label: 'Пакети', href: '#pakety' },
-  { label: 'Процес', href: '#proces' },
-  { label: 'Кейси', href: '#keisy' },
-  { label: 'Умови', href: '#umovy' },
+  { label: 'Пакети', href: '/#pakety' },
+  { label: 'Процес', href: '/#proces' },
+  { label: 'Кейси', href: '/#keisy' },
+  { label: 'Умови', href: '/pakety-i-umovy' },
 ]
 
-export const CTA = { label: 'Записатися', menuLabel: 'Записатися на розмову', href: '#rozmova' }
+export const CTA = { label: 'Записатися', menuLabel: 'Записатися на розмову', href: '/#rozmova' }
 
 export const SLOGAN = 'Зробимо майбутнє, яким ми його колись уявляли.'
 
@@ -21,17 +21,17 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: 'Студія',
     links: [
-      { label: 'Пакети', href: '#pakety' },
-      { label: 'Процес', href: '#proces' },
-      { label: 'Кейси', href: '#keisy' },
+      { label: 'Пакети', href: '/#pakety' },
+      { label: 'Процес', href: '/#proces' },
+      { label: 'Кейси', href: '/#keisy' },
     ],
   },
   {
     title: 'Умови',
     links: [
-      { label: 'Гарантія', href: '#umovy' },
-      { label: 'Оплата', href: '#umovy' },
-      { label: 'Підтримка', href: '#pidtrymka' },
+      { label: 'Гарантія', href: '/pakety-i-umovy#harantiya' },
+      { label: 'Оплата', href: '/pakety-i-umovy#oplata' },
+      { label: 'Підтримка', href: '/pakety-i-umovy#pidtrymka' },
     ],
   },
   {
@@ -47,6 +47,6 @@ export const FOOTER_COLUMNS: FooterColumn[] = [
 export const LEGAL = {
   copyright: '© 2026 Mikaido',
   privacyLabel: 'Політика конфіденційності',
-  privacyHref: '#',
+  privacyHref: '/polityka-konfidentsiynosti',
   cookiesLabel: 'Налаштування cookies',
 }
