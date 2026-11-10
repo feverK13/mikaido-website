@@ -63,6 +63,39 @@ function Rows({ pkg, sheet = false }: { pkg: PackageData; sheet?: boolean }) {
   )
 }
 
+/** Назва, строк, ціна, «для кого» й таблиця. live: тексти змінюються ефектами. Без live: статична копія для резервування висоти. */
+function InfoContent({ pkg, live = false }: { pkg: PackageData; live?: boolean }) {
+  return (
+    <>
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 max-[860px]:contents">
+        <div className="flex flex-wrap items-center gap-3 max-[860px]:order-1">
+          {live ? (
+            <SwapText mode="decode" text={pkg.name} className="font-px text-px44 uppercase max-[860px]:text-px33" />
+          ) : (
+            <span className="font-px text-px44 uppercase">{pkg.name}</span>
+          )}
+          <Term size="sm">{pkg.term}</Term>
+        </div>
+        {live ? (
+          <SwapText
+            mode="decode"
+            text={pkg.price}
+            className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap max-[860px]:order-3 min-[1100px]:text-h48"
+          />
+        ) : (
+          <span className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap min-[1100px]:text-h48">{pkg.price}</span>
+        )}
+      </div>
+      {live ? (
+        <SwapText mode="type" text={pkg.audience} className="block min-h-[1.5em] text-t14 text-muted max-[860px]:order-2" />
+      ) : (
+        <span className="block min-h-[1.5em] text-t14 text-muted">{pkg.audience}</span>
+      )}
+      <Rows pkg={pkg} />
+    </>
+  )
+}
+
 /** Блок вибору пакета на весь екран: меню, сцена з голограмою й опис. Керування мишею й клавіатурою; перехід голограми через розчинення, остання дія перемагає. */
 export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: PackageSelectorProps) {
   const pkg = PK[current]
@@ -295,19 +328,17 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           <canvas ref={hologram} data-hologram aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
         </div>
         <div className="grid gap-3 border-t border-fg p-[22px] max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 max-[860px]:contents">
-            <div className="flex flex-wrap items-center gap-3 max-[860px]:order-1">
-              <SwapText mode="decode" text={pkg.name} className="font-px text-px44 uppercase max-[860px]:text-px33" />
-              <Term size="sm">{pkg.term}</Term>
+          {/* Висота інфоблока статична: невидимі копії інших пакетів задають найвищий варіант, тому ефекти тексту її не рухають. */}
+          <div className="grid max-[860px]:contents">
+            <div className="grid gap-3 min-[861px]:[grid-area:1/1] max-[860px]:contents">
+              <InfoContent pkg={pkg} live />
             </div>
-            <SwapText
-              mode="decode"
-              text={pkg.price}
-              className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap max-[860px]:order-3 min-[1100px]:text-h48"
-            />
+            {PK.filter((p) => p.id !== pkg.id).map((p) => (
+              <div key={p.id} aria-hidden="true" inert className="invisible grid gap-3 [grid-area:1/1] max-[860px]:hidden">
+                <InfoContent pkg={p} />
+              </div>
+            ))}
           </div>
-          <SwapText mode="type" text={pkg.audience} className="block min-h-[1.5em] text-t14 text-muted max-[860px]:order-2" />
-          <Rows pkg={pkg} />
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 max-[860px]:hidden">
             <ButtonLink
               variant="primary"
