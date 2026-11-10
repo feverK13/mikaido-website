@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { ButtonLink } from '@/components/ui/button-link'
+import { buttonVariants } from '@/components/ui/button-variants'
+import '@/components/ui/button-a.css'
+import { IconButton } from '@/components/ui/icon-button'
 import { SwapText } from '@/components/ui/swap-text'
 import { TextLink } from '@/components/ui/text-link'
 import { Term } from '@/components/ui/term'
@@ -7,6 +10,7 @@ import { HEADER_HEIGHT } from '@/config/package-selector'
 import { PK, type PackageData } from '@/content/packages'
 import { useHologram } from '@/hooks/use-hologram'
 import { trackEvent } from '@/lib/analytics'
+import { burst } from '@/lib/effects/burst'
 import { dissolve } from '@/lib/effects/dissolve'
 import { isMotionAllowed } from '@/lib/effects/motion'
 import { cn } from '@/lib/utils'
@@ -15,6 +19,8 @@ import { PACKAGES_SECTION as C } from '../content'
 const screenColor = () => getComputedStyle(document.documentElement).getPropertyValue('--screen').trim()
 const KEY_GAP = 160
 const LAST = PK.length - 1
+const arrowButton =
+  'size-12 shrink-0 aria-disabled:cursor-not-allowed aria-disabled:border-line aria-disabled:text-line2 aria-disabled:active:translate-y-0 aria-disabled:active:bg-transparent'
 const two = (n: number) => String(n).padStart(2, '0')
 
 type PackageSelectorProps = {
@@ -73,6 +79,8 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
   useEffect(() => {
     live.current = { current, onChoose, onCurrentChange }
   })
+  const swipe = useRef<{ x: number; y: number } | null>(null)
+  const isChosen = pkg.id === chosen
   const hologram = useHologram(C.models[PK[shown].id])
 
   /* Перехід голограми: старе зникає (240 мс), нове з'являється (400 мс). Новий вибір скасовує попередній перехід. */
@@ -130,6 +138,17 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
     setMessage('')
     live.current.onCurrentChange(index)
     transition(index)
+  }
+
+  /* Свайп по сцені: поріг 40 px і |dx| більше за 1,5·|dy|. Вертикальний скрол лишається нативним (touch-action: pan-y). */
+  const onSwipeEnd = (x: number, y: number) => {
+    const from = swipe.current
+    swipe.current = null
+    if (!from) return
+    const dx = x - from.x
+    const dy = y - from.y
+    if (Math.abs(dx) < 40 || Math.abs(dx) < 1.5 * Math.abs(dy)) return
+    go(live.current.current + (dx < 0 ? 1 : -1), 'selector_swipe')
   }
 
   const choose = () => {
@@ -204,13 +223,13 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
       ref={root}
       id="pakety-vybir"
       style={{ ['--sel-min' as string]: `calc(100svh - ${HEADER_HEIGHT}px)` }}
-      className="grid grid-cols-[2fr_3fr] border border-fg bg-surface max-[860px]:grid-cols-1 [@media(min-height:560px)]:min-h-(--sel-min) [@media(min-height:560px)]:snap-start [@media(min-height:560px)]:scroll-mt-[70px]"
+      className="flex flex-col border border-fg bg-surface min-[861px]:grid min-[861px]:grid-cols-[2fr_3fr] [@media(min-height:560px)]:min-h-(--sel-min) [@media(min-height:560px)]:snap-start [@media(min-height:560px)]:scroll-mt-[70px]"
     >
       <p aria-live="polite" className="sr-only">
         {message || `${pkg.name}, ${pkg.price}, ${pkg.term}`}
       </p>
-      <div className="flex min-h-0 flex-col border-r border-fg bg-screen px-[18px] py-5 max-[860px]:border-r-0 max-[860px]:border-b max-[860px]:px-4 max-[860px]:py-4">
-        <div aria-hidden="true" className="flex items-center justify-between pb-3 pl-[34px] font-px text-px11 uppercase text-muted">
+      <div className="flex min-h-0 flex-col border-r border-fg bg-screen px-[18px] py-5 max-[860px]:border-r-0 max-[860px]:border-b max-[860px]:px-4 max-[860px]:py-3">
+        <div aria-hidden="true" className="flex items-center justify-between pb-3 max-[860px]:pb-2 pl-[34px] font-px text-px11 uppercase text-muted">
           <span>{C.menuTitle}</span>
           <span className="min-[861px]:hidden">{two(current + 1)} / {two(PK.length)}</span>
         </div>
@@ -258,27 +277,32 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           </span>
         </div>
       </div>
-      <div className="flex min-h-0 flex-col">
+      <div className="flex min-h-0 flex-1 flex-col">
         <div
           ref={stage}
           aria-hidden="true"
-          className="relative grid min-h-[140px] flex-1 place-items-center overflow-hidden bg-screen max-[860px]:flex-none max-[860px]:basis-[32svh]"
+          onPointerDown={(e) => {
+            if (e.pointerType !== 'mouse') swipe.current = { x: e.clientX, y: e.clientY }
+          }}
+          onPointerUp={(e) => onSwipeEnd(e.clientX, e.clientY)}
+          onPointerCancel={() => (swipe.current = null)}
+          className="relative grid min-h-[140px] flex-1 touch-pan-y place-items-center overflow-hidden bg-screen max-[860px]:basis-[140px]"
         >
           <canvas ref={hologram} aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
         </div>
-        <div className="grid gap-3 border-t border-fg p-[22px] max-[860px]:p-4">
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            <div className="flex flex-wrap items-center gap-3">
+        <div className="grid gap-3 border-t border-fg p-[22px] max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
+          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 max-[860px]:contents">
+            <div className="flex flex-wrap items-center gap-3 max-[860px]:order-1">
               <SwapText mode="decode" text={pkg.name} className="font-px text-px44 uppercase max-[860px]:text-px33" />
               <Term size="sm">{pkg.term}</Term>
             </div>
             <SwapText
               mode="decode"
               text={pkg.price}
-              className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap min-[1100px]:text-h48"
+              className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap max-[860px]:order-3 min-[1100px]:text-h48"
             />
           </div>
-          <SwapText mode="type" text={pkg.audience} className="block min-h-[1.5em] text-t14 text-muted" />
+          <SwapText mode="type" text={pkg.audience} className="block min-h-[1.5em] text-t14 text-muted max-[860px]:order-2" />
           <Rows pkg={pkg} />
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 max-[860px]:hidden">
             <ButtonLink
@@ -294,6 +318,39 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
             <TextLink href={`${C.fullHref}?pkg=${pkg.id}#tablytsia`}>{C.fullLabel}</TextLink>
           </div>
         </div>
+      </div>
+      {/* Телефон: панель керування внизу блоку. Вигляд як у нижніх панелей Головної. */}
+      <div
+        role="group"
+        aria-label={C.controls.label}
+        className="hidden items-center gap-2 border-t border-line bg-[color-mix(in_srgb,var(--bg)_94%,transparent)] px-[max(16px,env(safe-area-inset-left,0px))] pt-2 pb-[calc(8px+env(safe-area-inset-bottom,0px))] max-[860px]:flex max-[860px]:col-span-full"
+      >
+        <IconButton
+          icon="arrow"
+          aria-label={C.controls.prev}
+          aria-disabled={current === 0 || undefined}
+          onClick={() => go(current - 1, 'selector_button')}
+          className={cn(arrowButton, '[&_svg]:-rotate-90')}
+        />
+        <IconButton
+          icon="arrow"
+          aria-label={C.controls.next}
+          aria-disabled={current === LAST || undefined}
+          onClick={() => go(current + 1, 'selector_button')}
+          className={cn(arrowButton, '[&_svg]:rotate-90')}
+        />
+        <button
+          type="button"
+          aria-disabled={isChosen || undefined}
+          onClick={(e) => {
+            if (isChosen) return
+            burst(e.nativeEvent, e.currentTarget)
+            choose()
+          }}
+          className={cn(buttonVariants({ variant: 'primary' }), 'min-h-12 flex-[1.4] aria-disabled:cursor-default aria-disabled:opacity-60')}
+        >
+          {isChosen ? C.controls.chosen : C.controls.choose}
+        </button>
       </div>
     </div>
   )

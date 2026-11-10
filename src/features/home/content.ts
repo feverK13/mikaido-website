@@ -81,6 +81,7 @@ export const PACKAGES_SECTION = {
   discussCta: 'Обговорити',
   chosenLabel: 'Обрано',
   chosenAnnounce: 'Обрано пакет',
+  controls: { label: 'Керування вибором пакета', prev: 'Попередній пакет', next: 'Наступний пакет', choose: 'Обрати', chosen: 'Обрано' },
   ctaHref: '#rozmova',
   /** Голограма кожного пакета: лише на Головній. */
   models: { start: 'page', business: 'calendar', pro: 'nodes', catalog: 'box' } as Record<'start' | 'business' | 'pro' | 'catalog', 'page' | 'calendar' | 'nodes' | 'box'>,

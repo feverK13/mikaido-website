@@ -4,18 +4,19 @@ import { trackEvent } from '@/lib/analytics'
 import { cn } from '@/lib/utils'
 import { MOBILE_BAR } from '../content'
 
-/** Нижня панель дій на телефоні: з'являється, коли перший екран повністю прокручено, і ховається біля форми та в секції кейсів. */
+/** Нижня панель дій на телефоні: з'являється, коли перший екран повністю прокручено, і ховається біля форми, в секції кейсів і в блоці вибору пакета. */
 export function MobileBar() {
   const [on, setOn] = useState(false)
 
   useEffect(() => {
     const hero = document.querySelector('#top')
     const cases = document.querySelector('#keisy')
+    const selector = document.querySelector('#pakety-vybir')
     const form = document.querySelector('#rozmova')
     if (!hero || !form) return
     /* Панель потрібна, коли перший екран прокручено, і не потрібна біля форми та в кейсах (там своя панель). */
-    const seen = { past: false, form: false, cases: false }
-    const update = () => setOn(seen.past && !seen.form && !seen.cases)
+    const seen = { past: false, form: false, cases: false, selector: false }
+    const update = () => setOn(seen.past && !seen.form && !seen.cases && !seen.selector)
     const watch = (el: Element, init: IntersectionObserverInit, set: (e: IntersectionObserverEntry) => void) => {
       const io = new IntersectionObserver((e) => {
         set(e[0])
@@ -29,6 +30,7 @@ export function MobileBar() {
       watch(form, {}, (e) => (seen.form = e.isIntersecting)),
     ]
     if (cases) list.push(watch(cases, { rootMargin: '-20% 0px -20% 0px' }, (e) => (seen.cases = e.isIntersecting)))
+    if (selector) list.push(watch(selector, {}, (e) => (seen.selector = e.isIntersecting)))
     return () => list.forEach((io) => io.disconnect())
   }, [])
 
