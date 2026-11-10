@@ -56,7 +56,7 @@ export function BottomSheet({ open, onClose, label, className, children }: Botto
       document.removeEventListener('keydown', onKey)
       wide.removeEventListener('change', onWide)
       document.body.style.overflow = previous
-      if (opener?.isConnected) opener.focus()
+      if (opener?.isConnected) opener.focus({ preventScroll: true })
     }
   }, [open, onClose])
 

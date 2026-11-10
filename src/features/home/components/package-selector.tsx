@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { BottomSheet } from '@/components/ui/bottom-sheet'
 import { ButtonLink } from '@/components/ui/button-link'
 import { buttonVariants } from '@/components/ui/button-variants'
 import '@/components/ui/button-a.css'
@@ -32,7 +33,7 @@ type PackageSelectorProps = {
   onChoose?: (id: string) => void
 }
 
-function Rows({ pkg }: { pkg: PackageData }) {
+function Rows({ pkg, sheet = false }: { pkg: PackageData; sheet?: boolean }) {
   const ref = useRef<HTMLDivElement>(null)
   const first = useRef(true)
   const rows: [string, string][] = [
@@ -48,10 +49,10 @@ function Rows({ pkg }: { pkg: PackageData }) {
       first.current = false
       return
     }
-    if (isMotionAllowed()) ref.current?.animate({ opacity: [0, 1] }, { duration: 120, easing: 'steps(3, end)' })
-  }, [pkg.id])
+    if (!sheet && isMotionAllowed()) ref.current?.animate({ opacity: [0, 1] }, { duration: 120, easing: 'steps(3, end)' })
+  }, [pkg.id, sheet])
   return (
-    <div ref={ref} className="border-t border-line max-[860px]:hidden">
+    <div ref={ref} className={cn('border-t border-line', !sheet && 'max-[860px]:hidden')}>
       {rows.map(([label, value]) => (
         <div key={label} className="flex justify-between gap-4 border-b border-line py-2 text-t14 last:border-b-0">
           <span className="text-muted">{label}</span>
@@ -68,6 +69,9 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
   const [shown, setShown] = useState(current)
   const [flash, setFlash] = useState<number | null>(null)
   const [message, setMessage] = useState('')
+  const [details, setDetails] = useState(false)
+  const detailsButton = useRef<HTMLButtonElement>(null)
+  const closeDetails = useCallback(() => setDetails(false), [])
   const root = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const overlay = useRef<HTMLCanvasElement | null>(null)
@@ -187,7 +191,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
       if (event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return
       const target = event.target as HTMLElement | null
       if (target?.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]')) return
-      if (document.querySelector('[role="dialog"], dialog[open]') || document.body.style.overflow === 'hidden') return
+      if (document.querySelector('[role="dialog"]:not([inert]), dialog[open]') || document.body.style.overflow === 'hidden') return
       const i = live.current.current
       let to: number
       if (event.key === 'ArrowDown') {
@@ -340,6 +344,15 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           className={cn(arrowButton, '[&_svg]:rotate-90')}
         />
         <button
+          ref={detailsButton}
+          type="button"
+          aria-haspopup="dialog"
+          onClick={() => setDetails(true)}
+          className={cn(buttonVariants({ variant: 'secondary' }), 'min-h-12 flex-1 px-3')}
+        >
+          {C.controls.details}
+        </button>
+        <button
           type="button"
           aria-disabled={isChosen || undefined}
           onClick={(e) => {
@@ -352,6 +365,28 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           {isChosen ? C.controls.chosen : C.controls.choose}
         </button>
       </div>
+      <BottomSheet open={details} onClose={closeDetails} label={`${C.controls.details}: ${pkg.name}`}>
+        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 pb-2">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-px text-px33 uppercase">{pkg.name}</span>
+            <Term size="sm">{pkg.term}</Term>
+          </div>
+          <span className="font-display text-h30 font-medium tracking-[-0.02em] whitespace-nowrap">{pkg.price}</span>
+        </div>
+        <Rows pkg={pkg} sheet />
+        <ButtonLink
+          variant="primary"
+          href={C.ctaHref}
+          className="mt-3 min-h-12"
+          onClick={() => {
+            trackEvent('select_package', { package: pkg.id, location: 'selector_sheet_discuss' })
+            onChoose?.(pkg.id)
+            setDetails(false)
+          }}
+        >
+          {C.discussCta} {pkg.name}
+        </ButtonLink>
+      </BottomSheet>
     </div>
   )
 }
