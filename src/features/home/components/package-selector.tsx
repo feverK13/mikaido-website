@@ -54,7 +54,7 @@ function Rows({ pkg, sheet = false }: { pkg: PackageData; sheet?: boolean }) {
   return (
     <div ref={ref} className={cn('border-t border-line', !sheet && 'max-[860px]:hidden')}>
       {rows.map(([label, value]) => (
-        <div key={label} className="flex justify-between gap-4 border-b border-line py-2 text-t14 last:border-b-0">
+        <div key={label} className="flex justify-between gap-4 border-b border-line py-[6px] text-t14 last:border-b-0">
           <span className="text-muted">{label}</span>
           <span className="text-right">{value}</span>
         </div>
@@ -327,7 +327,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
         >
           <canvas ref={hologram} data-hologram aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
         </div>
-        <div className="grid gap-3 border-t border-fg p-[22px] max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
+        <div className="grid gap-3 border-t border-fg px-[22px] py-4 max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
           {/* Висота інфоблока статична: невидимі копії інших пакетів задають найвищий варіант, тому ефекти тексту її не рухають. */}
           <div className="grid max-[860px]:contents">
             <div className="grid gap-3 min-[861px]:[grid-area:1/1] max-[860px]:contents">
