@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
+import { disableAnalytics, enableAnalytics } from '@/lib/analytics'
 import { isMotionAllowed } from '@/lib/effects/motion'
 import { CookieBanner } from './cookie-banner'
 import { CookieConsentContext } from './cookie-consent-context'
@@ -15,6 +16,12 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
     if (consent) return
     const timer = setTimeout(() => setBannerOpen(true), isMotionAllowed() ? 1000 : 0)
     return () => clearTimeout(timer)
+  }, [consent])
+
+  /* Аналітика вантажиться лише після згоди й вимикається при відкликанні. */
+  useEffect(() => {
+    if (consent?.analytics) enableAnalytics()
+    else disableAnalytics()
   }, [consent])
 
   const choose = useCallback((analytics: boolean) => {
