@@ -5,7 +5,6 @@ import { buttonVariants } from '@/components/ui/button-variants'
 import '@/components/ui/button-a.css'
 import { IconButton } from '@/components/ui/icon-button'
 import { SwapText } from '@/components/ui/swap-text'
-import { TextLink } from '@/components/ui/text-link'
 import { Term } from '@/components/ui/term'
 import { HEADER_HEIGHT } from '@/config/package-selector'
 import { PK, type PackageData } from '@/content/packages'
@@ -265,8 +264,8 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
       <p aria-live="polite" className="sr-only">
         {message || `${pkg.name}, ${pkg.price}, ${pkg.term}`}
       </p>
-      <div className="flex min-h-0 flex-col border-r border-fg bg-screen px-[18px] py-5 max-[860px]:border-r-0 max-[860px]:border-b max-[860px]:px-4 max-[860px]:py-3">
-        <div aria-hidden="true" className="flex items-center justify-between pb-3 max-[860px]:pb-2 pl-[34px] font-px text-px11 uppercase text-muted">
+      <div className="flex min-h-0 flex-col border-r border-fg bg-screen px-[18px] py-5 [@media(max-height:700px)_and_(min-width:861px)]:py-4 max-[860px]:border-r-0 max-[860px]:border-b max-[860px]:px-4 max-[860px]:py-3">
+        <div aria-hidden="true" className="flex items-center justify-between pb-3 [@media(max-height:700px)_and_(min-width:861px)]:pb-2 max-[860px]:pb-2 pl-[34px] font-px text-px11 uppercase text-muted">
           <span>{C.menuTitle}</span>
           <span className="min-[861px]:hidden">{two(current + 1)} / {two(PK.length)}</span>
         </div>
@@ -286,7 +285,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
               onClick={() => go(i, 'selector_menu')}
               onAnimationEnd={() => setFlash(null)}
               className={cn(
-                'grid min-h-16 w-full cursor-pointer grid-cols-[22px_1fr_auto] items-center gap-[10px] px-[10px] py-3 font-px leading-none text-fg uppercase transition-colors duration-instant ease-linear select-none max-[860px]:min-h-11 max-[860px]:py-2',
+                'grid min-h-14 w-full cursor-pointer grid-cols-[22px_1fr_auto] items-center gap-[10px] px-[10px] py-3 font-px leading-none text-fg uppercase transition-colors duration-instant ease-linear select-none max-[860px]:min-h-11 max-[860px]:py-2',
                 '[@media(hover:hover)]:hover:bg-[color-mix(in_srgb,var(--fg)_8%,transparent)] aria-selected:bg-fg aria-selected:text-bg [@media(hover:hover)]:aria-selected:hover:bg-fg',
                 flash === i && 'animate-[mf_240ms_steps(1)_1]',
               )}
@@ -302,7 +301,23 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
             </div>
           ))}
         </div>
-        <div aria-hidden="true" className="mt-auto flex flex-wrap items-center justify-between gap-[14px] border-t border-dashed border-line2 px-[10px] pt-4 font-px text-px11 uppercase text-muted max-[860px]:hidden">
+        <div className="mt-auto grid gap-space-3 px-[10px] pt-4 [@media(max-height:700px)_and_(min-width:861px)]:pt-3 max-[860px]:hidden">
+          <ButtonLink
+            variant="primary"
+            href={C.ctaHref}
+            className="min-h-12 w-full"
+            onClick={() => {
+              trackEvent('select_package', { package: pkg.id, location: 'selector_discuss' })
+              onChoose?.(pkg.id)
+            }}
+          >
+            {C.discussCta} {pkg.name}
+          </ButtonLink>
+          <ButtonLink variant="secondary" href={`${C.fullHref}?pkg=${pkg.id}#tablytsia`} className="min-h-12 w-full">
+            {C.fullLabel}
+          </ButtonLink>
+        </div>
+        <div aria-hidden="true" className="mt-4 [@media(max-height:700px)_and_(min-width:861px)]:mt-3 flex flex-wrap items-center justify-between gap-[14px] border-t border-dashed border-line2 px-[10px] pt-4 [@media(max-height:700px)_and_(min-width:861px)]:pt-3 font-px text-px11 uppercase text-muted max-[860px]:hidden">
           <span>{two(current + 1)} / {two(PK.length)}</span>
           <span className="flex flex-wrap gap-[14px] [@media(hover:none)]:hidden">
             {C.keys.map((k) => (
@@ -325,7 +340,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           onPointerCancel={() => (swipe.current = null)}
           className="relative grid min-h-[140px] flex-1 touch-pan-y place-items-center overflow-hidden bg-screen max-[860px]:basis-[140px]"
         >
-          <canvas ref={hologram} data-hologram aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
+          <canvas ref={hologram} data-hologram aria-hidden="true" className="absolute inset-0 m-auto block size-full max-w-[420px]" />
         </div>
         <div className="grid gap-3 border-t border-fg px-[22px] py-4 max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
           {/* Висота інфоблока статична: невидимі копії інших пакетів задають найвищий варіант, тому ефекти тексту її не рухають. */}
@@ -338,19 +353,6 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
                 <InfoContent pkg={p} />
               </div>
             ))}
-          </div>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-1 max-[860px]:hidden">
-            <ButtonLink
-              variant="primary"
-              href={C.ctaHref}
-              onClick={() => {
-                trackEvent('select_package', { package: pkg.id, location: 'selector_discuss' })
-                onChoose?.(pkg.id)
-              }}
-            >
-              {C.discussCta} {pkg.name}
-            </ButtonLink>
-            <TextLink href={`${C.fullHref}?pkg=${pkg.id}#tablytsia`}>{C.fullLabel}</TextLink>
           </div>
         </div>
       </div>
