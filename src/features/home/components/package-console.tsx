@@ -15,11 +15,13 @@ type PackageConsoleProps = {
   /** Індекс вибраного пакета й зміна вибору (стан живе в секції, щоб посилання на повні умови знало вибір). */
   current: number
   onCurrentChange: (index: number) => void
-  /** Викликається з id пакета, коли партнер натиснув «Обговорити»: форма підставляє пакет. */
-  onDiscuss?: (name: string) => void
+  /** Обраний пакет (id): його рядок меню має чип «Обрано». */
+  chosen?: string
+  /** Робить пакет обраним (id): форма підставляє його. Викликається при «Обговорити». */
+  onChoose?: (id: string) => void
 }
 
-function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: string) => void }) {
+function Detail({ pkg, onChoose }: { pkg: PackageData; onChoose?: (id: string) => void }) {
   const rows: [string, string][] = [
     [C.detailRows.scope, pkg.scope],
     [C.detailRows.key, pkg.key],
@@ -46,7 +48,7 @@ function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: strin
       <div className="flex flex-wrap gap-[10px] border-t border-line px-[22px] pt-4 pb-[22px]">
         <ButtonLink variant="primary" href={C.ctaHref} onClick={() => {
             trackEvent('select_package', { package: pkg.id, location: 'console_discuss' })
-            onDiscuss?.(pkg.id)
+            onChoose?.(pkg.id)
           }}>
           {C.discussCta} {pkg.name}
         </ButtonLink>
@@ -56,7 +58,7 @@ function Detail({ pkg, onDiscuss }: { pkg: PackageData; onDiscuss?: (name: strin
 }
 
 /** Ігровий блок «Пакети»: меню як у консолі (стрілки, дотик) і картка пакета, що змінюється через розчинення. Голограма змінюється разом із пакетом. */
-export function PackageConsole({ current, onCurrentChange, onDiscuss }: PackageConsoleProps) {
+export function PackageConsole({ current, onCurrentChange, chosen, onChoose }: PackageConsoleProps) {
   const [swapping, setSwapping] = useState(false)
   const [flash, setFlash] = useState<number | null>(null)
   const swap = useRef<HTMLCanvasElement>(null)
@@ -124,7 +126,10 @@ export function PackageConsole({ current, onCurrentChange, onDiscuss }: PackageC
               ▶
             </span>
             <span className="text-px22">{pkg.name}</span>
-            <span className={cn('text-px11', i === current ? 'text-bg opacity-75' : 'text-muted')}>{pkg.term}</span>
+            <span className="flex items-center gap-2">
+              {pkg.id === chosen && <Term size="sm">{C.chosenLabel}</Term>}
+              <span className={cn('text-px11', i === current ? 'text-bg opacity-75' : 'text-muted')}>{pkg.term}</span>
+            </span>
           </button>
         ))}
         <div aria-hidden="true" className="mt-[10px] flex flex-wrap gap-[14px] border-t border-dashed border-line2 px-[10px] pt-4 font-px text-px11 uppercase text-muted [@media(hover:none)]:hidden">
@@ -140,7 +145,7 @@ export function PackageConsole({ current, onCurrentChange, onDiscuss }: PackageC
         </div>
       </div>
       <div className="relative grid" aria-live="polite">
-        <Detail key={current} pkg={PK[current]} onDiscuss={onDiscuss} />
+        <Detail key={current} pkg={PK[current]} onChoose={onChoose} />
         <canvas
           ref={swap}
           aria-hidden="true"

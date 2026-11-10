@@ -79,6 +79,7 @@ export const PACKAGES_SECTION = {
   ],
   detailRows: { scope: 'Обсяг', key: 'Ключове', revisions: 'Правки', pulse: 'Пульс у подарунок', payment: 'Оплата' },
   discussCta: 'Обговорити',
+  chosenLabel: 'Обрано',
   ctaHref: '#rozmova',
   /** Голограма кожного пакета: лише на Головній. */
   models: { start: 'page', business: 'calendar', pro: 'nodes', catalog: 'box' } as Record<'start' | 'business' | 'pro' | 'catalog', 'page' | 'calendar' | 'nodes' | 'box'>,

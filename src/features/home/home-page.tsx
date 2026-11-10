@@ -65,7 +65,7 @@ export function HomePage({ onOpenCookieSettings }: HomePageProps) {
         <Hero />
         <Path />
         <Cases />
-        <Packages onDiscuss={setPackageValue} />
+        <Packages chosen={packageValue === UNKNOWN_PACKAGE ? undefined : packageValue} onChoose={setPackageValue} />
         <Process />
         <Terms />
         <Faq />
