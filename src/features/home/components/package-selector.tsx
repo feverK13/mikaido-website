@@ -292,7 +292,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
           onPointerCancel={() => (swipe.current = null)}
           className="relative grid min-h-[140px] flex-1 touch-pan-y place-items-center overflow-hidden bg-screen max-[860px]:basis-[140px]"
         >
-          <canvas ref={hologram} aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
+          <canvas ref={hologram} data-hologram aria-hidden="true" className="block h-full max-h-full w-full max-w-[420px]" />
         </div>
         <div className="grid gap-3 border-t border-fg p-[22px] max-[860px]:gap-2 max-[860px]:px-4 max-[860px]:py-3">
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 max-[860px]:contents">

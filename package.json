@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "shots": "node scripts/shots.mjs",
     "compare": "node scripts/compare.mjs",
-    "a11y": "node scripts/a11y.mjs"
+    "a11y": "node scripts/a11y.mjs",
+    "test:selector": "node scripts/package-selector.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
