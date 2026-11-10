@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react'
 import { FOOTER_COLUMNS, LEGAL, SLOGAN } from '@/config/site'
-import { useTheme } from '@/hooks/use-theme'
-import { dither } from '@/lib/effects/dither'
+import { DissolveReveal } from '@/components/ui/dissolve-reveal'
+import { PixelStrip } from '@/components/ui/pixel-strip'
 import { cn } from '@/lib/utils'
 import { BrandLink } from './brand-link'
 
@@ -13,22 +12,12 @@ type FooterProps = {
   className?: string
 }
 
-/** Підвал: піксельна смужка ірису згори (dither), знак, три колонки посилань, нижній рядок. Без анімацій появи. */
+/** Підвал: широка піксельна смужка ірису згори (мерехтіння як у сяйві гарантії), знак, три колонки посилань, нижній рядок. Блоки з'являються піксельним розчиненням. */
 export function Footer({ onOpenCookieSettings, className }: FooterProps) {
-  const canvas = useRef<HTMLCanvasElement>(null)
-  const { theme } = useTheme()
-
-  useEffect(() => {
-    const paint = () => canvas.current && dither(canvas.current, { dark: theme === 'dark' })
-    paint()
-    addEventListener('resize', paint)
-    return () => removeEventListener('resize', paint)
-  }, [theme])
-
   return (
-    <footer className={cn('grid gap-6 border-t border-fg bg-bg px-6 pt-7 pb-[18px]', className)}>
-      <canvas ref={canvas} aria-hidden="true" className="block h-[6px] w-full [image-rendering:pixelated]" />
-      <div className="grid grid-cols-2 gap-6 min-[761px]:grid-cols-[1.4fr_repeat(3,1fr)]">
+    <footer className={cn('grid gap-6 bg-bg px-6 pt-7 pb-[18px]', className)}>
+      <PixelStrip className="h-8" />
+      <DissolveReveal className="grid grid-cols-2 gap-6 min-[761px]:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <BrandLink href="/" />
           <p className="mt-3 text-t13 text-muted">{SLOGAN}</p>
@@ -43,8 +32,8 @@ export function Footer({ onOpenCookieSettings, className }: FooterProps) {
             ))}
           </div>
         ))}
-      </div>
-      <div className="flex flex-wrap justify-between gap-3 border-t border-line pt-[14px] text-t13 text-muted">
+      </DissolveReveal>
+      <DissolveReveal className="flex flex-wrap justify-between gap-3 pt-[14px] text-t13 text-muted">
         <span>{LEGAL.copyright}</span>
         <span className="flex flex-wrap gap-x-2">
           <a href={LEGAL.privacyHref} className="text-fg no-underline pointer-coarse:inline-flex pointer-coarse:min-h-tap pointer-coarse:items-center">
@@ -59,7 +48,7 @@ export function Footer({ onOpenCookieSettings, className }: FooterProps) {
             {LEGAL.cookiesLabel}
           </button>
         </span>
-      </div>
+      </DissolveReveal>
     </footer>
   )
 }

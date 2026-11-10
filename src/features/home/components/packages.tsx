@@ -18,17 +18,21 @@ export function Packages({ onDiscuss }: PackagesProps) {
       <DissolveReveal>
         <PackageConsole current={current} onCurrentChange={setCurrent} onDiscuss={onDiscuss} />
       </DissolveReveal>
-      <ul className="mt-4 flex flex-wrap gap-x-[22px] gap-y-[10px] text-t14 text-muted">
-        {C.always.map((item) => (
-          <li key={item.text} className="inline-flex items-center gap-2">
-            <PixelIcon name={item.icon} size={24} className="block text-fg" />
-            {item.text}
-          </li>
-        ))}
-      </ul>
-      <TextLink href={`${C.fullHref}?pkg=${PK[current].id}#tablytsia`} className="justify-self-start">
-        {C.fullLabel}
-      </TextLink>
+      <DissolveReveal>
+        <ul className="mt-4 flex flex-wrap gap-x-[22px] gap-y-[10px] text-t14 text-muted">
+          {C.always.map((item) => (
+            <li key={item.text} className="inline-flex items-center gap-2">
+              <PixelIcon name={item.icon} size={24} className="block text-fg" />
+              {item.text}
+            </li>
+          ))}
+        </ul>
+      </DissolveReveal>
+      <DissolveReveal>
+        <TextLink href={`${C.fullHref}?pkg=${PK[current].id}#tablytsia`} className="justify-self-start">
+          {C.fullLabel}
+        </TextLink>
+      </DissolveReveal>
     </Section>
   )
 }

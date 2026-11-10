@@ -37,12 +37,14 @@ export function Path() {
           ))}
         </div>
       </DissolveReveal>
-      <div className="mt-4 grid max-w-[760px] grid-cols-[24px_1fr] items-start gap-4 border border-l-[3px] border-line border-l-fg bg-surface px-[18px] py-4 text-t16">
-        <PixelIcon name="info" size={24} className="block" />
-        <div>
-          {C.boundary.main} <span className="text-muted">{C.boundary.note}</span>
+      <DissolveReveal>
+        <div className="mt-4 grid max-w-[760px] grid-cols-[24px_1fr] items-start gap-4 border border-l-[3px] border-line border-l-fg bg-surface px-[18px] py-4 text-t16">
+          <PixelIcon name="info" size={24} className="block" />
+          <div>
+            {C.boundary.main} <span className="text-muted">{C.boundary.note}</span>
+          </div>
         </div>
-      </div>
+      </DissolveReveal>
     </Section>
   )
 }

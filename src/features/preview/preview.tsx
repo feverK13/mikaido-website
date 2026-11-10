@@ -24,6 +24,9 @@ import { CookieSettings } from '@/features/cookies/cookie-settings'
 import { Header } from '@/components/layout/header'
 import { IconButton } from '@/components/ui/icon-button'
 import { ICONS, type IconName } from '@/components/ui/pixel-icon/icons'
+import { PixelFrame } from '@/components/ui/pixel-frame'
+import { PixelNavButton } from '@/components/ui/pixel-nav-button'
+import { PixelStrip } from '@/components/ui/pixel-strip'
 import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
 import { Stat, Term } from '@/components/ui/term'
 import { TextLink } from '@/components/ui/text-link'
@@ -253,6 +256,25 @@ export function Preview() {
           <IconButton icon="menu" aria-label="Меню" />
           <IconButton icon="theme" aria-label="Змінити тему" />
           <IconButton icon="close" aria-label="Закрити" />
+        </div>
+      </Block>
+
+      <Block title="PixelNavButton">
+        <div className={row}>
+          <PixelNavButton direction="prev" aria-label="Попередній кейс" />
+          <PixelNavButton direction="next" aria-label="Наступний кейс" />
+          <PixelNavButton direction="prev" aria-label="Попередній кейс" disabled />
+          <PixelNavButton direction="next" aria-label="Наступний кейс" disabled />
+        </div>
+      </Block>
+
+      <Block title="PixelFrame і PixelStrip">
+        <div className="grid gap-4">
+          <div className="relative grid min-h-[140px] place-items-center p-7 text-center">
+            <PixelFrame />
+            <span className="relative font-display text-h20">Піксельна рамка</span>
+          </div>
+          <PixelStrip className="h-8" />
         </div>
       </Block>
 

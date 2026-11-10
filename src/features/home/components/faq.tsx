@@ -1,4 +1,5 @@
 import { Section, SectionHeader } from '@/components/layout/section'
+import { DissolveReveal } from '@/components/ui/dissolve-reveal'
 import { Accordion } from '@/components/ui/accordion'
 import { TextLink } from '@/components/ui/text-link'
 import { FAQ_SECTION as C } from '../content'
@@ -10,10 +11,14 @@ export function Faq() {
   return (
     <Section id="pytannya">
       <SectionHeader tab={C.tab} title={C.title} />
-      <Accordion items={items} />
-      <TextLink href={C.moreHref} className="justify-self-start">
-        {C.moreLabel}
-      </TextLink>
+      <DissolveReveal>
+        <Accordion items={items} />
+      </DissolveReveal>
+      <DissolveReveal>
+        <TextLink href={C.moreHref} className="justify-self-start">
+          {C.moreLabel}
+        </TextLink>
+      </DissolveReveal>
     </Section>
   )
 }

@@ -2,6 +2,8 @@ import { useEffect, useMemo } from 'react'
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { Section } from '@/components/layout/section'
+import { DissolveReveal } from '@/components/ui/dissolve-reveal'
+import { RevealHeading } from '@/components/ui/reveal-heading'
 import { JsonLd } from '@/components/ui/json-ld'
 import { FAQ, PK } from '@/content/packages'
 import { usePageMeta } from '@/hooks/use-page-meta'
@@ -58,10 +60,14 @@ export function PackagesPage({ onOpenCookieSettings }: PackagesPageProps) {
       <Header current="/pakety-i-umovy" />
       <main id="main">
         <Section id="top" hero className="pb-[clamp(24px,3vw,40px)]">
-          <h1 className="font-display text-h48 leading-none font-semibold tracking-[-0.035em] text-balance max-md:text-h30">
-            {PAGE.title}
-          </h1>
-          <p className="max-w-[44ch] text-t18 text-muted max-md:text-t16">{PAGE.lead}</p>
+          <RevealHeading
+            as="h1"
+            text={PAGE.title}
+            className="font-display text-h48 leading-none font-semibold tracking-[-0.035em] text-balance max-md:text-h30 [&_.mk-g]:font-px [&_.mk-g]:font-normal [&_.mk-g]:tracking-normal [&_.mk-g]:text-muted"
+          />
+          <DissolveReveal>
+            <p className="max-w-[44ch] text-t18 text-muted max-md:text-t16">{PAGE.lead}</p>
+          </DissolveReveal>
         </Section>
         <AnchorBar />
         <PackagesBlock selectedId={selectedId} />

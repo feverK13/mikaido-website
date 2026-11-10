@@ -73,7 +73,7 @@ export function Process() {
   const { theme } = useTheme()
   const [stage, setStage] = useState(LAST)
   const [win, setWin] = useState(false)
-  const paragraphs = useRef<(HTMLParagraphElement | null)[]>([])
+  const paragraphs = useRef<(HTMLElement | null)[]>([])
   const timers = useRef<number[]>([])
   const alive = useRef(true)
   const again = useRef<() => void>(undefined)
@@ -117,6 +117,7 @@ export function Process() {
 
   const start = useCallback(async () => {
     if (!isMotionAllowed()) {
+      paragraphs.current.forEach((el, i) => el && (el.textContent = PROCESS_STEPS[i].description))
       setStage(LAST)
       return
     }
@@ -170,13 +171,19 @@ export function Process() {
                   {ok ? C.done : now ? C.now : `${C.stepLabel} 0${i + 1}`}
                 </span>
                 <b className="font-display text-t16 font-medium">{step.title}</b>
-                <p
-                  ref={(el) => {
-                    paragraphs.current[i] = el
-                  }}
-                  className="min-h-[3em] text-t14 text-muted"
-                >
-                  {step.description}
+                {/* Опис спершу порожній, друкується по черзі після появи решти блока; невидимий повний текст тримає висоту */}
+                <p className="grid min-h-[3em] text-t14 text-muted">
+                  <span className="sr-only">{step.description}</span>
+                  <span aria-hidden="true" className="invisible [grid-area:1/1]">
+                    {step.description}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    ref={(el) => {
+                      paragraphs.current[i] = el
+                    }}
+                    className="[grid-area:1/1]"
+                  />
                 </p>
               </li>
             )

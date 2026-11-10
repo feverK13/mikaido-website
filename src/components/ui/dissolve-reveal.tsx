@@ -1,6 +1,7 @@
 import { useEffect, useRef, type HTMLAttributes } from 'react'
 import { dissolve } from '@/lib/effects/dissolve'
-import { isCoarsePointer, isMotionAllowed } from '@/lib/effects/motion'
+import { isMotionAllowed } from '@/lib/effects/motion'
+import { onReveal } from '@/lib/effects/reveal'
 import { cn } from '@/lib/utils'
 
 /* Ключові блоки розчиняються по одному: наступний чекає, поки закінчиться попередній. */
@@ -36,31 +37,25 @@ export function DissolveReveal({ className, children, onRevealed, ...props }: Di
     }
 
     let cancelled = false
-    const observer = new IntersectionObserver(
-      (entries, obs) => {
-        if (!entries[0].isIntersecting) return
-        obs.disconnect()
-        queue = queue.then(
-          () =>
-            new Promise<void>((resolve) => {
-              if (cancelled) return resolve()
-              dissolve(cv, {
-                color: bg,
-                done: () => {
-                  cv.hidden = true
-                  onRevealed?.()
-                  resolve()
-                },
-              })
-            }),
-        )
-      },
-      { threshold: isCoarsePointer() ? 0.25 : 0.35 },
-    )
-    observer.observe(el)
+    const stop = onReveal(el, () => {
+      queue = queue.then(
+        () =>
+          new Promise<void>((resolve) => {
+            if (cancelled) return resolve()
+            dissolve(cv, {
+              color: bg,
+              done: () => {
+                cv.hidden = true
+                onRevealed?.()
+                resolve()
+              },
+            })
+          }),
+      )
+    })
     return () => {
       cancelled = true
-      observer.disconnect()
+      stop()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

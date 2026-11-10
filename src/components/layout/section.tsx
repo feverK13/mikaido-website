@@ -1,5 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import { DissolveReveal } from '@/components/ui/dissolve-reveal'
+import { TypedText } from '@/components/ui/typed-text'
+import { RevealHeading } from '@/components/ui/reveal-heading'
 import { Container } from './container'
 
 type SectionProps = HTMLAttributes<HTMLElement> & {
@@ -39,13 +42,18 @@ export function SectionHeader({ tab, title, lead }: SectionHeaderProps) {
     <div className="mb-[clamp(28px,4vw,48px)] grid grid-cols-12 gap-x-5 gap-y-[14px]">
       <div className="col-span-full flex items-center gap-[14px]">
         <span className="bg-fg py-[6px] pr-4 pl-[10px] font-px text-px11 uppercase text-bg [clip-path:polygon(0_0,calc(100%-10px)_0,100%_4px,100%_100%,0_100%)]">
-          {tab}
+          <TypedText text={tab} />
         </span>
       </div>
-      <h2 className="col-span-full font-display text-h30 leading-[1.04] text-balance font-semibold tracking-[-0.03em] max-md:text-h24 md:col-span-8">
-        {title}
-      </h2>
-      {lead && <p className="col-span-full text-t18 text-muted md:col-span-7">{lead}</p>}
+      <RevealHeading
+        text={title}
+        className="col-span-full font-display text-h30 leading-[1.04] text-balance font-semibold tracking-[-0.03em] max-md:text-h24 md:col-span-8 [&_.mk-g]:font-px [&_.mk-g]:font-normal [&_.mk-g]:tracking-normal [&_.mk-g]:text-muted"
+      />
+      {lead && (
+        <DissolveReveal className="col-span-full md:col-span-7">
+          <p className="text-t18 text-muted">{lead}</p>
+        </DissolveReveal>
+      )}
     </div>
   )
 }
