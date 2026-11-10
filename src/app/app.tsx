@@ -23,7 +23,16 @@ function Routes() {
     trackPageView(pathname, document.title)
   }, [pathname])
 
-  switch (pathname.replace(/\/$/, '') || '/') {
+  const path = pathname.replace(/\/$/, '') || '/'
+  if (import.meta.env.DEV && Preview && path === '/__preview') {
+    return (
+      <Suspense fallback={null}>
+        <Preview />
+      </Suspense>
+    )
+  }
+
+  switch (path) {
     case '/':
       return <HomePage onOpenCookieSettings={openSettings} />
     case '/pakety-i-umovy':
@@ -32,14 +41,6 @@ function Routes() {
       return <ThanksPage onOpenCookieSettings={openSettings} />
     case '/polityka-konfidentsiynosti':
       return <PrivacyPage onOpenCookieSettings={openSettings} />
-    case '/__preview':
-      return Preview ? (
-        <Suspense fallback={null}>
-          <Preview />
-        </Suspense>
-      ) : (
-        <NotFoundPage onOpenCookieSettings={openSettings} />
-      )
     default:
       return <NotFoundPage onOpenCookieSettings={openSettings} />
   }

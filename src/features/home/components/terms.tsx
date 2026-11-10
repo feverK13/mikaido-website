@@ -20,11 +20,11 @@ export function Terms() {
             <span className="max-w-[28ch] text-t14 text-muted">{C.guarantee.text}</span>
           </div>
         </DissolveReveal>
-        <ul className="grid grid-cols-2 border border-line bg-surface max-[560px]:grid-cols-1">
+        <ul className="grid grid-cols-1 content-start border border-line bg-surface">
           {C.differences.map((item) => (
             <li
               key={item.title}
-              className="grid grid-cols-[24px_1fr] content-start gap-[14px] border-b border-line p-5 odd:border-r max-[560px]:odd:border-r-0"
+              className="grid grid-cols-[24px_1fr] content-start gap-[14px] border-b border-line p-5 last:border-b-0"
             >
               <PixelIcon name={item.icon} size={24} className="block" />
               <div>
