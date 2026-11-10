@@ -1,4 +1,4 @@
-/* Перевірки блоку вибору пакета (docs/specs/package-selector.md, розділ 9).
+/* Перевірки блоку вибору пакета.
    Запуск: npm run test:selector. Лише частина: SEL_ONLY=desktop|mobile|general npm run test:selector.
    Теми light і dark, рух no-preference і reduce. Десктоп: 1280x620, 1366x657, 1440x789, 1536x730, 1920x950, 1920x1080, 1366x768, 1280x720.
    Мобільний (touch): 390x844 і 360x640. Повертає код 1, якщо хоч одна перевірка впала. */
