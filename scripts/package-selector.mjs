@@ -1,6 +1,6 @@
 /* Перевірки блоку вибору пакета (docs/specs/package-selector.md, розділ 9).
    Запуск: npm run test:selector. Лише частина: SEL_ONLY=desktop|mobile|general npm run test:selector.
-   Теми light і dark, рух no-preference і reduce. Десктоп: 1366x768, 1280x720, 1440x900, 1920x1080.
+   Теми light і dark, рух no-preference і reduce. Десктоп: 1280x620, 1366x657, 1440x789, 1536x730, 1920x950, 1920x1080, 1366x768, 1280x720.
    Мобільний (touch): 390x844 і 360x640. Повертає код 1, якщо хоч одна перевірка впала. */
 import { chromium } from 'playwright'
 import { createServer } from 'vite'
@@ -9,10 +9,14 @@ const PORT = 5193
 const THEMES = ['light', 'dark']
 const MOTIONS = ['no-preference', 'reduce']
 const DESKTOP = [
+  [1280, 620],
+  [1366, 657],
+  [1440, 789],
+  [1536, 730],
+  [1920, 950],
+  [1920, 1080],
   [1366, 768],
   [1280, 720],
-  [1440, 900],
-  [1920, 1080],
 ]
 const MOBILE = [
   [390, 844],
@@ -111,6 +115,35 @@ async function checkReduceVisible(page, label) {
   check(`${label}: нічого не приховано`, hidden.length === 0, hidden.join('|'))
 }
 
+async function actionsInMenuColumn(page, label) {
+  const r = await page.evaluate((s) => {
+    const el = document.querySelector(s)
+    const left = el.children[1].getBoundingClientRect()
+    const a = [...el.children[1].querySelectorAll('a')].filter((x) => /Обговорити|Повні умови/.test(x.innerText))
+    const box = a.map((x) => x.getBoundingClientRect())
+    const footer = [...el.children[1].children].at(-1).getBoundingClientRect()
+    const row = el.querySelector('[role=option]').getBoundingClientRect()
+    return {
+      count: a.length,
+      tags: a.map((x) => x.tagName + ':' + x.innerText.split(' ')[0]),
+      inLeft: box.every((b) => b.left >= left.left && b.right <= left.right),
+      stacked: box.length === 2 && box[0].bottom <= box[1].top,
+      sameHeight: box.length === 2 && Math.abs(box[0].height - box[1].height) < 1,
+      full: box.length === 2 && Math.abs(box[0].width - box[1].width) < 1 && box[0].width > left.width * 0.8,
+      aboveFooter: box.length === 2 && box[1].bottom <= footer.top,
+      row: row.height,
+      rightHas: [...el.children[2].querySelectorAll('a, button')].filter((x) => /Обговорити|Повні умови/.test(x.innerText)).length,
+    }
+  }, BLOCK)
+  check(`${label}: дві кнопки в лівій колонці`, r.count === 2 && r.inLeft, JSON.stringify(r))
+  check(`${label}: кнопки одна під одною на всю ширину`, r.stacked && r.full, JSON.stringify(r))
+  check(`${label}: однакова висота кнопок`, r.sameHeight, JSON.stringify(r))
+  check(`${label}: кнопки над роздільником`, r.aboveFooter, JSON.stringify(r))
+  check(`${label}: обидві кнопки є посиланнями`, r.tags.every((t) => t.startsWith('A:')), r.tags.join())
+  check(`${label}: у правій колонці кнопок немає`, r.rightHas === 0, JSON.stringify(r))
+  check(`${label}: рядок меню не нижче 56`, r.row >= 56, String(r.row))
+}
+
 async function desktopFit() {
   for (const [w, h] of DESKTOP)
     for (const theme of THEMES)
@@ -119,6 +152,7 @@ async function desktopFit() {
         const { context, page } = await open(w, h, theme, motion, false)
         await toBlock(page)
         await fit(page, label, 140)
+        await actionsInMenuColumn(page, label)
         if (motion === 'reduce') await checkReduceVisible(page, label)
         await context.close()
       }
