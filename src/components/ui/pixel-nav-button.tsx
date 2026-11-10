@@ -22,6 +22,8 @@ export function PixelNavButton({ direction, className, type = 'button', disabled
         'grid size-12 cursor-pointer place-items-center border-0 bg-fg text-bg transition-transform duration-instant ease-linear',
         CORNERS,
         '[@media(hover:hover)]:hover:bg-fg/85 active:translate-y-[2px]',
+        /* clip-path обрізає зовнішній outline, тому кільце фокуса внутрішнє, як у кнопки A */
+        'focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_2px_var(--accent),inset_0_0_0_3px_var(--bg)]',
         'aria-disabled:translate-y-0 aria-disabled:cursor-not-allowed aria-disabled:bg-surface2 aria-disabled:text-line2 [@media(hover:hover)]:aria-disabled:hover:bg-surface2',
         className,
       )}
