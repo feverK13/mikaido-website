@@ -1,4 +1,4 @@
-/* Проганяє axe-core на Головній і на /__preview в обох темах на 390 і 1280 px.
+/* Проганяє axe-core на всіх сторінках сайту і на /__preview в обох темах на 390 і 1280 px.
    Запуск: npm run a11y. Рух вимкнено (reducedMotion), щоб полотна розчинення не закривали текст.
    Кольори токенів скрипт не змінює: контраст лише повідомляється. */
 import { AxeBuilder } from '@axe-core/playwright'
@@ -6,7 +6,7 @@ import { chromium } from 'playwright'
 import { createServer } from 'vite'
 
 const PORT = 5192
-const PAGES = ['/', '/__preview']
+const PAGES = (process.env.A11Y_PAGES ?? '/,/pakety-i-umovy,/polityka-konfidentsiynosti,/dyakuyemo,/nope,/__preview').split(',')
 const THEMES = ['light', 'dark']
 const SIZES = [390, 1280]
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']
