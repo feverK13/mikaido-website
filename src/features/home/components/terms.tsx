@@ -1,46 +1,9 @@
-import { useEffect, useRef } from 'react'
 import { Section, SectionHeader } from '@/components/layout/section'
 import { DissolveReveal } from '@/components/ui/dissolve-reveal'
+import { PixelGlow } from '@/components/ui/pixel-glow'
 import { PixelIcon } from '@/components/ui/pixel-icon/pixel-icon'
 import { TextLink } from '@/components/ui/text-link'
-import { useTheme } from '@/hooks/use-theme'
-import { drawGlow } from '@/lib/effects/glow'
-import { isMotionAllowed } from '@/lib/effects/motion'
 import { TERMS_SECTION as C } from '../content'
-
-/** Піксельне сяйво: малюється лише коли блок у вікні, кадр раз на 100 мс. Без руху кадр статичний. */
-function Glow() {
-  const ref = useRef<HTMLCanvasElement>(null)
-  const { theme } = useTheme()
-
-  useEffect(() => {
-    const cv = ref.current
-    if (!cv) return
-    const dark = theme === 'dark'
-    let visible = false
-    let last = 0
-    let raf = 0
-    const observer = new IntersectionObserver((entries) => {
-      visible = entries[0].isIntersecting
-    })
-    observer.observe(cv)
-    drawGlow(cv, 0, dark, false)
-    const frame = (t: number) => {
-      if (visible && t - last > 100) {
-        last = t
-        drawGlow(cv, t, dark, isMotionAllowed())
-      }
-      raf = requestAnimationFrame(frame)
-    }
-    raf = requestAnimationFrame(frame)
-    return () => {
-      cancelAnimationFrame(raf)
-      observer.disconnect()
-    }
-  }, [theme])
-
-  return <canvas ref={ref} aria-hidden="true" className="absolute inset-0 size-full [image-rendering:pixelated]" />
-}
 
 /** Секція «Умови»: велика цифра гарантії з піксельним сяйвом і шість відмінностей. */
 export function Terms() {
@@ -49,7 +12,7 @@ export function Terms() {
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
       <div className="grid grid-cols-[1fr_2fr] gap-3 max-[900px]:grid-cols-1">
         <DissolveReveal className="grid min-h-[300px] place-items-center overflow-hidden border border-fg bg-bg">
-          <Glow />
+          <PixelGlow />
           <div className="relative grid gap-2 bg-bg px-[18px] py-[14px] text-center">
             <b className="font-display text-h30 leading-none font-medium tracking-[-0.03em] min-[600px]:text-h48">
               {C.guarantee.value}

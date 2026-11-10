@@ -1,5 +1,8 @@
+import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from './button'
+import { PixelIcon } from './pixel-icon/pixel-icon'
+import type { IconName } from './pixel-icon/icons'
 
 type PackageCardProps = {
   name: string
@@ -8,13 +11,30 @@ type PackageCardProps = {
   rows: [string, string][]
   selected?: boolean
   onSelect?: () => void
+  /** Піксельна іконка 48 px над назвою (замість голограми). */
+  icon?: IconName
+  /** Дрібний рядок під ціною, наприклад про фіксацію суми в пропозиції. */
+  priceNote?: ReactNode
+  /** Власна дія замість кнопки «Обрати» (наприклад, посилання). */
+  action?: ReactNode
   className?: string
 }
 
 const cornerOn = 'before:[border-width:0_16px_7px_0]'
 
 /** Картка пакета: назва px-33, ціна h-24, рядки умов, дія. Обрана картка: рамка 2 px fg і скошений кут-прапорець. */
-export function PackageCard({ name, audience, price, rows, selected = false, onSelect, className }: PackageCardProps) {
+export function PackageCard({
+  name,
+  audience,
+  price,
+  rows,
+  selected = false,
+  onSelect,
+  icon,
+  priceNote,
+  action,
+  className,
+}: PackageCardProps) {
   return (
     <article
       className={cn(
@@ -26,12 +46,14 @@ export function PackageCard({ name, audience, price, rows, selected = false, onS
       )}
     >
       <div className="grid justify-items-start gap-3 px-5 pt-5 pb-4">
+        {icon && <PixelIcon name={icon} size={48} className="block text-fg" />}
         <h3 className="font-px text-px33 font-normal uppercase leading-none">{name}</h3>
         <p className="text-t13 text-muted">{audience}</p>
       </div>
-      <p className="px-5 pb-4 font-display text-h24 font-medium tracking-[-0.02em] whitespace-nowrap tabular-nums">
-        {price}
-      </p>
+      <div className="grid gap-1 px-5 pb-4">
+        <p className="font-display text-h24 font-medium tracking-[-0.02em] whitespace-nowrap tabular-nums">{price}</p>
+        {priceNote && <p className="text-t13 text-muted">{priceNote}</p>}
+      </div>
       <dl className="border-t border-line px-5 py-1">
         {rows.map(([label, value]) => (
           <div
@@ -44,9 +66,11 @@ export function PackageCard({ name, audience, price, rows, selected = false, onS
         ))}
       </dl>
       <div className="grid gap-2 px-5 pt-4 pb-5">
-        <Button className="w-full" aria-pressed={selected} onClick={onSelect}>
-          Обрати
-        </Button>
+        {action ?? (
+          <Button className="w-full" aria-pressed={selected} onClick={onSelect}>
+            Обрати
+          </Button>
+        )}
       </div>
     </article>
   )
