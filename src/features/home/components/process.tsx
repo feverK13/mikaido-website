@@ -76,6 +76,7 @@ export function Process() {
   const paragraphs = useRef<(HTMLElement | null)[]>([])
   const timers = useRef<number[]>([])
   const alive = useRef(true)
+  const started = useRef(false)
   const again = useRef<() => void>(undefined)
 
   useEffect(() => {
@@ -136,7 +137,14 @@ export function Process() {
   return (
     <Section id="proces">
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
-      <DissolveReveal onRevealed={() => void start()}>
+      <DissolveReveal
+        onRevealed={() => {
+          /* Друк і цикл запускаються лише при першій появі: повторні входи показують блок як є. */
+          if (started.current) return
+          started.current = true
+          void start()
+        }}
+      >
         <ol
           style={{ '--p': progress } as CSSProperties}
           className={cn(
