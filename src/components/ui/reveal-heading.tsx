@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils'
 /** Скільки триває розшифрування (decode.ts); поки воно йде, нове не запускаємо. */
 const DECODE_MS = 900
 
+/** Повторна поява заголовка: розчинення 240 мс (токен) без розшифрування. */
+const REPEAT_MS = 240
 const busyUntil = new WeakMap<HTMLElement, number>()
 
 /** Запускає розшифрування, якщо попереднє вже закінчилось, і резервує висоту заголовка на його час. */
@@ -25,12 +27,13 @@ type RevealHeadingProps = {
   className?: string
 }
 
-/** Заголовок: на вході розшифровується під розчиненням полотна, на виході накривається ним назад (Mikaido.decode + dissolve).
+/** Заголовок: при першому вході розшифровується під розчиненням полотна, при повторних лише розчиняється за 240 мс, на виході накривається ним назад (Mikaido.decode + dissolve).
     Висота на час розшифрування резервується. Текст лишається в дереві доступності. */
 export function RevealHeading({ text, as: Tag = 'h2', className }: RevealHeadingProps) {
   const label = useRef<HTMLSpanElement>(null)
   const { host, canvas } = useBeat<HTMLHeadingElement>({
-    onEnterStart: () => startDecode(host.current, label.current, text),
+    onEnterStart: (first) => first && startDecode(host.current, label.current, text),
+    repeatEnterMs: REPEAT_MS,
   })
 
   return (

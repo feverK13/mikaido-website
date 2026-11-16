@@ -7,8 +7,10 @@ import { registerBeat } from '@/lib/effects/scene-director'
 const EXIT_MS = 400
 
 type BeatOptions = {
-  /** Починається поява (розчинення ще йде). */
-  onEnterStart?: () => void
+  /** Починається поява (розчинення ще йде). first: це перша поява блока. */
+  onEnterStart?: (first: boolean) => void
+  /** Тривалість розчинення при повторних появах (мс). Без неї як при першій. */
+  repeatEnterMs?: number
   /** Поява закінчилась. */
   onEntered?: () => void
 }
@@ -36,6 +38,7 @@ export function useBeat<T extends HTMLElement = HTMLElement>(options: BeatOption
     }
 
     let last: DissolveHandle | null = null
+    let enters = 0
 
     const cover = () => {
       last = null
@@ -54,8 +57,10 @@ export function useBeat<T extends HTMLElement = HTMLElement>(options: BeatOption
       cover,
       enter: (from, done) => {
         cv.hidden = false
-        latest.current.onEnterStart?.()
+        const first = enters++ === 0
+        latest.current.onEnterStart?.(first)
         const handle = dissolve(cv, {
+          dur: first ? undefined : latest.current.repeatEnterMs,
           color: pageBg(),
           from,
           covered: last?.covered() ?? 1,
