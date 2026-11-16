@@ -26,12 +26,7 @@ export function Header({ current, className }: HeaderProps) {
 
   return (
     <>
-      {/* Вбудовані браузери (Telegram на iPhone) малюють сторінку під власною верхньою смугою: без ковпака над шапкою видно вміст, що прокручується. Ковпак закриває зону safe-area-inset-top фоном сторінки. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 h-[env(safe-area-inset-top,0px)] bg-bg min-[861px]:hidden"
-      />
-      <header className={cn('sticky top-[env(safe-area-inset-top,0px)] z-30 border-b border-line bg-bg', className)}>
+      <header className={cn('sticky top-0 z-30 border-b border-line bg-bg', className)}>
         <Container className="flex items-center justify-between gap-4 py-[14px]">
           <BrandLink href="/" />
           <nav aria-label="Головна навігація" className="flex gap-1 max-[860px]:hidden">

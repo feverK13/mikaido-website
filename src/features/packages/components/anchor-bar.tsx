@@ -24,7 +24,7 @@ export function AnchorBar() {
   return (
     <nav
       aria-label={PAGE.anchorsLabel}
-      className="sticky top-[calc(var(--header-h,64px)+env(safe-area-inset-top,0px))] z-20 border-b border-line bg-bg"
+      className="sticky top-[var(--header-h,64px)] z-20 border-b border-line bg-bg"
     >
       <ul className="mx-auto flex w-full max-w-[calc(1200px+128px)] gap-1 overflow-x-auto px-[max(16px,env(safe-area-inset-left,0px))] min-[768px]:px-8 min-[1200px]:px-16">
         {PAGE.anchors.map((anchor) => (

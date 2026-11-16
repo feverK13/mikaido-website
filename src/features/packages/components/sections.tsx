@@ -84,7 +84,7 @@ export function PackagesBlock({ selectedId }: PackagesBlockProps) {
         </PackageGrid>
       </DissolveReveal>
       <DissolveReveal>
-        <div id="tablytsia" className="scroll-mt-[calc(var(--header-h,64px)+64px+env(safe-area-inset-top,0px))]">
+        <div id="tablytsia" className="scroll-mt-[calc(var(--header-h,64px)+64px)]">
           <h3 className="mb-3 font-display text-t16 font-medium">{PACKAGES_BLOCK.tableTitle}</h3>
           <ConditionsTable
             head={head}

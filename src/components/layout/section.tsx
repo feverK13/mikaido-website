@@ -17,7 +17,7 @@ export function Section({ id, hero = false, className, children, ...props }: Sec
     <section
       id={id}
       className={cn(
-        'relative scroll-mt-[calc(88px+env(safe-area-inset-top,0px))]',
+        'relative scroll-mt-[88px]',
         hero
           ? 'pt-[clamp(48px,7vw,96px)] pb-[clamp(48px,6vw,80px)]'
           : 'border-t border-line py-[clamp(64px,9vw,128px)] first:border-t-0',
