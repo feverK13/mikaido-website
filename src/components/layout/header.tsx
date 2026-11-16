@@ -26,6 +26,11 @@ export function Header({ current, className }: HeaderProps) {
 
   return (
     <>
+      {/* Вбудований браузер Telegram на iPhone не обрізає вміст над вікном сторінки, тож прокручений текст видно за його смугою. Сторінка не може закрити цю зону ні fixed, ні safe-area (там 0). Працює лише липкий елемент із власним фоном: він стоїть над вікном (top -200px, висота 200px, у потоці місця не займає) і заливає смугу. У звичайних браузерах він завжди поза екраном. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none sticky top-[-200px] z-30 -mt-[200px] h-[200px] bg-bg"
+      />
       <header className={cn('sticky top-0 z-30 border-b border-line bg-bg', className)}>
         <Container className="flex items-center justify-between gap-4 py-[14px]">
           <BrandLink href="/" />
