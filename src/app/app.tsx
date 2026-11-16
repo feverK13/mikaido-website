@@ -14,6 +14,11 @@ const Preview = import.meta.env.DEV
   ? lazy(() => import('@/features/preview/preview').then((m) => ({ default: m.Preview })))
   : null
 
+/* Тимчасовий оверлей ?debug=viewport: лише в dev. */
+const ViewportDebug = import.meta.env.DEV
+  ? lazy(() => import('@/components/dev/viewport-debug').then((m) => ({ default: m.ViewportDebug })))
+  : null
+
 function Routes() {
   const { openSettings } = useCookieConsent()
   const { pathname } = useLocation()
@@ -47,9 +52,15 @@ function Routes() {
 }
 
 export function App() {
+  const debugViewport = import.meta.env.DEV && ViewportDebug && new URLSearchParams(location.search).get('debug') === 'viewport'
   return (
     <AppProvider>
       <Routes />
+      {debugViewport && ViewportDebug ? (
+        <Suspense fallback={null}>
+          <ViewportDebug />
+        </Suspense>
+      ) : null}
     </AppProvider>
   )
 }
