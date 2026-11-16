@@ -108,6 +108,13 @@ async function runCombo(theme, profile) {
             await page.waitForTimeout(120)
             await shot(page, box, `${name}-active`)
             await page.mouse.up()
+            /* Клік по посиланню (підвал, шапка) міг вивести зі сторінки перегляду: повертаємось і відновлюємо тему. */
+            if (!page.url().includes('/__preview')) {
+              await page.goBack({ waitUntil: 'networkidle' })
+              await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme)
+              await page.evaluate(() => document.fonts.ready)
+              continue
+            }
             if (EFFECT_SECTIONS.some((e) => title.startsWith(e))) {
               await page.waitForTimeout(350)
               await section.screenshot({ path: `${OUT}/${name}-after-click.png` })
