@@ -11,6 +11,7 @@
     "shots": "node scripts/shots.mjs",
     "compare": "node scripts/compare.mjs",
     "a11y": "node scripts/a11y.mjs",
+    "check:scroll": "node scripts/check-scroll.mjs",
     "test:selector": "node scripts/package-selector.mjs"
   },
   "dependencies": {
