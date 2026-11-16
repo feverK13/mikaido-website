@@ -35,7 +35,19 @@ try {
         await page.evaluate((t) => (document.documentElement.dataset.theme = t), theme)
         await page.evaluate(() => document.fonts.ready)
         await page.waitForTimeout(400)
-        const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze()
+        const result = await new AxeBuilder({ page }).withTags(TAGS).analyze()
+        /* Виняток лише для dev-сторінки /__preview: демо-посилання a[href="#"] у тексті (link-in-text-block).
+           TextLink у тексті перевірити на Політиці. На сторінках сайту виняток не діє. */
+        const violations =
+          path === '/__preview'
+            ? result.violations
+                .map((v) =>
+                  v.id === 'link-in-text-block'
+                    ? { ...v, nodes: v.nodes.filter((n) => !n.target.some((t) => t.includes('a[href="#"]'))) }
+                    : v,
+                )
+                .filter((v) => v.nodes.length)
+            : result.violations
         console.log(`\n${path} ${theme} ${width}px: ${violations.length} порушень`)
         for (const v of violations) {
           total += v.nodes.length
