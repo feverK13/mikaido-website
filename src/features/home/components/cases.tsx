@@ -15,17 +15,21 @@ const SWAP_MS = 240
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
-/** Чи секція кейсів у середній смузі вікна: тоді на телефоні замість панелі з якорями випливає панель перемикання кейсів. */
-function useCasesActive() {
+/** Чи картка кейса видна більшою частиною (не менше половини її висоти або половини вікна): тоді на телефоні випливає панель перемикання кейсів. */
+function useCardMostlyVisible() {
   const [active, setActive] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const el = document.querySelector('#keisy')
+    const el = ref.current
     if (!el) return
-    const io = new IntersectionObserver((e) => setActive(e[0].isIntersecting), { rootMargin: '-20% 0px -20% 0px' })
+    const io = new IntersectionObserver(
+      ([e]) => setActive(e.intersectionRatio >= 0.5 || e.intersectionRect.height >= innerHeight * 0.5),
+      { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1] },
+    )
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  return active
+  return [active, ref] as const
 }
 
 /** Секція «Кейси»: зліва слайдер кейсів, справа заклик у піксельній рамці й дві кнопки перемикання. Зміна кейса: розчинення 240 + 240 мс. */
@@ -61,7 +65,7 @@ export function Cases() {
     })
   }
 
-  const active = useCasesActive()
+  const [active, cardRef] = useCardMostlyVisible()
   const item = C.items[shown]
 
   return (
@@ -69,7 +73,7 @@ export function Cases() {
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
       <div className="grid grid-cols-[1.3fr_1fr] grid-rows-[auto_auto_1fr] items-start gap-3 [grid-template-areas:'card_cta''card_btns''card_.'] max-[860px]:grid-cols-1 max-[860px]:grid-rows-none max-[860px]:[grid-template-areas:'card''btns''cta']">
         <DissolveReveal className="[grid-area:card]">
-          <div className="relative">
+          <div ref={cardRef} className="relative">
             <CaseCard
               url={item.url}
               placeholderLabel={item.placeholderLabel}
