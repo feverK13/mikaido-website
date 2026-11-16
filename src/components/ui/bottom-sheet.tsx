@@ -1,4 +1,5 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, type ReactNode } from 'react'
+import { useSheetDrag } from '@/hooks/use-sheet-drag'
 import { cn } from '@/lib/utils'
 
 type BottomSheetProps = {
@@ -12,9 +13,9 @@ type BottomSheetProps = {
 
 const FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
-/** Нижня шторка (до 860 px). Відкривається кроками steps(6) за 240 мс. Фокус-пастка, Escape й тап по фону закривають, фокус повертається на елемент, що її відкрив, прокрутка сторінки заблокована, поки шторка відкрита. */
+/** Нижня шторка (до 860 px). Відкривається кроками steps(6) за 240 мс. Фокус-пастка, Escape, тап по фону й жест вниз за ручку закривають, фокус повертається на елемент, що її відкрив, прокрутка сторінки заблокована, поки шторка відкрита. */
 export function BottomSheet({ open, onClose, label, className, children }: BottomSheetProps) {
-  const sheet = useRef<HTMLDivElement>(null)
+  const { sheet, gripProps } = useSheetDrag({ open, onClose })
 
   useEffect(() => {
     if (!open) return
@@ -58,7 +59,7 @@ export function BottomSheet({ open, onClose, label, className, children }: Botto
       document.body.style.overflow = previous
       if (opener?.isConnected) opener.focus({ preventScroll: true })
     }
-  }, [open, onClose])
+  }, [open, onClose, sheet])
 
   return (
     <>
@@ -82,7 +83,10 @@ export function BottomSheet({ open, onClose, label, className, children }: Botto
           className,
         )}
       >
-        <span aria-hidden="true" className="mt-1 mb-2 h-1 w-9 justify-self-center bg-line2" />
+        {/* Зона захоплення 44 px: ручка й верхня смуга. Лише вона має touch-action: none, вміст шторки прокручується як завжди. */}
+        <div {...gripProps} aria-hidden="true" className="-mt-2 grid h-11 touch-none justify-items-center pt-3">
+          <span className="h-1 w-9 bg-line2" />
+        </div>
         {children}
       </div>
     </>
