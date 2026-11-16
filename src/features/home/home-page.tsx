@@ -9,7 +9,6 @@ import { Cases } from './components/cases'
 import { Contact, UNKNOWN_PACKAGE } from './components/contact'
 import { Faq } from './components/faq'
 import { Hero } from './components/hero'
-import { MobileBar } from './components/mobile-bar'
 import { Packages } from './components/packages'
 import { Path } from './components/path'
 import { Process } from './components/process'
@@ -72,7 +71,6 @@ export function HomePage({ onOpenCookieSettings }: HomePageProps) {
         <Contact packageValue={packageValue} onPackageChange={setPackageValue} />
       </main>
       <Footer onOpenCookieSettings={onOpenCookieSettings} />
-      <MobileBar />
     </>
   )
 }

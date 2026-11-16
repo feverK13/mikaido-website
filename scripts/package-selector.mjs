@@ -432,20 +432,14 @@ async function mobile(w, h, theme, motion) {
   await done.tap({ force: true })
   check(`${label}: повторний тап нічого не ламає`, (await selected(page)) === 2)
 
-  // плаваюча панель
-  const barHidden = () =>
-    page.evaluate(() => {
-      const bar = [...document.querySelectorAll('div.fixed')].find((d) => d.querySelector('a[href="#pakety"]') && d.querySelector('a[href="#rozmova"]'))
-      return !bar || !!bar.closest('[inert]')
-    })
-  await toBlock(page)
-  check(`${label}: плаваюча панель схована в блоці`, await barHidden())
+  // плаваючої панелі «Пакети / Записатися» на телефоні немає
   await page.evaluate(() => document.querySelector('#proces').scrollIntoView())
   await page.waitForTimeout(700)
-  check(`${label}: панель повертається після блоку`, !(await barHidden()))
-  await page.evaluate(() => scrollTo(0, 0))
-  await page.waitForTimeout(500)
-  check(`${label}: панелі немає на першому екрані`, await barHidden())
+  const bar = await page.evaluate(
+    () => !![...document.querySelectorAll('div.fixed')].find((d) => d.querySelector('a[href="#pakety"]') && d.querySelector('a[href="#rozmova"]')),
+  )
+  check(`${label}: плаваючої панелі дій немає`, !bar)
+  await toBlock(page)
 
   // вертикальний скрол по сцені (в кінці: синтетичний дотик CDP збиває подальші тапи)
   await toBlock(page)

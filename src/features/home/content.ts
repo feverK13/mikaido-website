@@ -109,11 +109,6 @@ export const TERMS_SECTION = {
 
 export const SKIP_LINK = 'До змісту'
 
-export const MOBILE_BAR = {
-  secondary: { label: 'Пакети', href: '#pakety' },
-  primary: { label: 'Записатися', href: '#rozmova' },
-}
-
 export const FAQ_SECTION = {
   tab: '/07 Питання',
   title: 'Часті питання',
