@@ -153,6 +153,16 @@ export function Process() {
     <Section id="proces">
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
       <DissolveReveal
+        onEnterStart={() => {
+          /* Блок ще розчиняється: прибираємо старий друк і етапи, щоб крізь розчинення не світився готовий текст. */
+          if (typing.current) return
+          timers.current.forEach(clearTimeout)
+          timers.current = []
+          run.current++
+          setWin(false)
+          setStage(-1)
+          paragraphs.current.forEach((el) => el && (el.textContent = ''))
+        }}
         onRevealed={() => {
           /* Щоразу, коли блок з'являється, друк і цикл ідуть з початку. Поки триває друк, повторний вхід не перезапускає його. */
           if (typing.current) return
