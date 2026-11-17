@@ -281,7 +281,7 @@ export function PackageSelector({ current, onCurrentChange, chosen, onChoose }: 
       ref={root}
       id="pakety-vybir"
       style={{ ['--sel-min' as string]: `calc(100svh - ${HEADER_HEIGHT}px)` }}
-      className="relative flex flex-col border border-fg bg-surface min-[861px]:grid min-[861px]:grid-cols-[2fr_3fr] [@media(min-height:560px)]:min-h-(--sel-min) [@media(min-height:560px)]:snap-start [@media(min-height:560px)]:scroll-mt-[70px]"
+      className="relative flex flex-col bg-surface after:pointer-events-none after:absolute after:inset-0 after:z-10 after:border after:border-fg after:content-[''] min-[861px]:grid min-[861px]:grid-cols-[2fr_3fr] [@media(min-height:560px)]:min-h-(--sel-min) [@media(min-height:560px)]:snap-start [@media(min-height:560px)]:scroll-mt-[70px]"
     >
       <p aria-live="polite" className="sr-only">
         {message || `${pkg.name}, ${pkg.price}, ${pkg.term}`}
