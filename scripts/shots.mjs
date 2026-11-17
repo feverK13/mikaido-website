@@ -51,7 +51,10 @@ async function shot(page, box, file) {
 
 async function pressTabTo(page, handle) {
   await page.evaluate(() => document.activeElement?.blur())
-  for (let i = 0; i < 80; i++) {
+  /* Після кліку мишею Chrome починає Tab із клікнутого елемента, а blur() цього не скидає. Крок назад ставить
+     початок навігації перед ним, інакше до самого елемента довелось би обійти всю сторінку (понад 80 зупинок). */
+  await page.keyboard.press('Shift+Tab')
+  for (let i = 0; i < 200; i++) {
     await page.keyboard.press('Tab')
     if (await handle.evaluate((el) => el === document.activeElement)) return true
   }
