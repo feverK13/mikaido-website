@@ -1,3 +1,4 @@
+import { lockScroll } from '@/lib/scroll-root'
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -41,15 +42,16 @@ export function Select({ label, options, value, onChange, className }: SelectPro
   useEffect(() => {
     if (!open) return
     const query = matchMedia('(max-width: 860px)')
-    const previous = document.body.style.overflow
+    let unlock: (() => void) | undefined
     const apply = () => {
-      document.body.style.overflow = query.matches ? 'hidden' : previous
+      unlock?.()
+      unlock = query.matches ? lockScroll() : undefined
     }
     apply()
     query.addEventListener('change', apply)
     return () => {
       query.removeEventListener('change', apply)
-      document.body.style.overflow = previous
+      unlock?.()
     }
   }, [open])
 

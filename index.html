@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mikaido</title>
+    <script>
+      /* Позначає вбудований браузер Telegram (там прокручується контейнер #root, див. scroll-root.ts). ?iab=telegram вмикає позначку вручну. */
+      if (/Telegram/i.test(navigator.userAgent) || window.TelegramWebviewProxy || /[?&]iab=telegram/.test(location.search))
+        document.documentElement.setAttribute('data-iab', 'telegram')
+    </script>
     <meta name="description" content="[заповнити]" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

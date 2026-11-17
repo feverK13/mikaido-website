@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { isContainerScroll, scrollPos, scrollTarget } from '@/lib/scroll-root'
 
 /** Тимчасовий dev-оверлей ?debug=viewport: числа вікна, safe-area і шапки. Лише в dev, у збірку не потрапляє. */
 export function ViewportDebug() {
@@ -19,7 +20,7 @@ export function ViewportDebug() {
         ['innerHeight', innerHeight],
         ['visualViewport.height', vv ? Math.round(vv.height * 100) / 100 : 'n/a'],
         ['visualViewport.offsetTop', vv ? Math.round(vv.offsetTop * 100) / 100 : 'n/a'],
-        ['scrollY', Math.round(scrollY * 100) / 100],
+        ['scrollPos' + (isContainerScroll() ? ' (#root)' : ''), Math.round(scrollPos() * 100) / 100],
         ['header top', header ? Math.round(header.top * 100) / 100 : 'n/a'],
         ['header height', header ? Math.round(header.height * 100) / 100 : 'n/a'],
         ['documentElement.clientHeight', document.documentElement.clientHeight],
@@ -27,12 +28,13 @@ export function ViewportDebug() {
       if (out.current) out.current.textContent = rows.map(([k, v]) => `${k}: ${v}`).join('\n')
     }
     update()
-    addEventListener('scroll', update, { passive: true })
+    const scroller = scrollTarget()
+    scroller.addEventListener('scroll', update, { passive: true })
     addEventListener('resize', update)
     window.visualViewport?.addEventListener('resize', update)
     window.visualViewport?.addEventListener('scroll', update)
     return () => {
-      removeEventListener('scroll', update)
+      scroller.removeEventListener('scroll', update)
       removeEventListener('resize', update)
       window.visualViewport?.removeEventListener('resize', update)
       window.visualViewport?.removeEventListener('scroll', update)

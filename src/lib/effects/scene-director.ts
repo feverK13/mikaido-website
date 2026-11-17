@@ -9,6 +9,7 @@
    - Після різкого стрибка скролу (перехід за якорем, кінець сторінки) і в кінці сторінки виходів немає: усе у вікні видно.
    Геометрію не опитуємо на кожному кадрі: стан беатів і сцен дають IntersectionObserver-и, напрямок береться з різниці scrollY.
    Токени руху (80, 160, 240, 400 мс) із mikaido-theme.css. Без руху (prefers-reduced-motion) режисер не потрібен. */
+import { isContainerScroll, scrollPos, scrollRoot, scrollTarget, scrollTotal } from '../scroll-root'
 import { isMotionAllowed } from './motion'
 
 /** На скільки пікселів менше блока має лишатися видно в момент початку виходу (лише телефон, до 860 px). Підбирається вручну. */
@@ -80,6 +81,7 @@ let jumpUntil = 0
 let dirty = false
 let raf = 0
 let attached = false
+let scroller: Window | HTMLElement | undefined
 let viewIO: IntersectionObserver | undefined
 let liveIO: IntersectionObserver | undefined
 let sceneIO: IntersectionObserver | undefined
@@ -228,7 +230,7 @@ function reconcile() {
 }
 
 function onScroll() {
-  const y = scrollY
+  const y = scrollPos()
   const d = y - lastY
   if (d * dir > 0) lastY = y
   else if (Math.abs(d) >= DIR_HYSTERESIS) {
@@ -251,7 +253,7 @@ function onScroll() {
 }
 
 function measure() {
-  maxScroll = document.documentElement.scrollHeight
+  maxScroll = scrollTotal()
   onScroll()
   markDirty()
 }
@@ -270,7 +272,7 @@ function pickActive() {
 function attach() {
   if (attached) return
   attached = true
-  lastY = prevY = scrollY
+  lastY = prevY = scrollPos()
 
   const track =
     (key: 'onscreen' | 'live') =>
@@ -279,7 +281,7 @@ function attach() {
         const b = byEl.get(e.target)
         if (!b) continue
         b[key] = e.isIntersecting
-        b.docTop = e.boundingClientRect.top + scrollY
+        b.docTop = e.boundingClientRect.top + scrollPos()
       }
       markDirty()
     }
@@ -296,11 +298,12 @@ function attach() {
     },
     { rootMargin: '-49% 0px -50% 0px', threshold: 0 },
   )
-  addEventListener('scroll', onScroll, { passive: true })
+  scroller = scrollTarget()
+  scroller.addEventListener('scroll', onScroll, { passive: true })
   addEventListener('resize', measure)
   /* Зміна висоти сторінки (шрифти, акордеон) зсуває беати без скролу. */
   resizeObserver = new ResizeObserver(measure)
-  resizeObserver.observe(document.body)
+  resizeObserver.observe(isContainerScroll() ? (document.querySelector('main') ?? scrollRoot()) : document.body)
   themeObserver = new MutationObserver(repaintCovered)
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 }
@@ -308,7 +311,7 @@ function attach() {
 function detach() {
   if (!attached || beats.size) return
   attached = false
-  removeEventListener('scroll', onScroll)
+  scroller?.removeEventListener('scroll', onScroll)
   removeEventListener('resize', measure)
   viewIO?.disconnect()
   liveIO?.disconnect()

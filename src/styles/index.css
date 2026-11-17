@@ -1,3 +1,19 @@
 @import "tailwindcss";
 @import "./mikaido-theme.css";
 @import "./effects.css";
+
+/* Вбудований браузер Telegram на iPhone не обрізає вміст над вікном сторінки: прокручений текст видно за його верхньою смугою,
+   і закрити це зі сторінки не можна (fixed і sticky не малюються над вікном під час скролу). Тому там документ не
+   прокручується, а прокручується контейнер #root. Решту браузерів не зачіпає. Див. src/lib/scroll-root.ts. */
+html[data-iab="telegram"],
+html[data-iab="telegram"] body {
+  height: 100%;
+  overflow: hidden;
+}
+html[data-iab="telegram"] #root {
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: none;
+}

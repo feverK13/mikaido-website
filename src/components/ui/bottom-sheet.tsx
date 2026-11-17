@@ -1,5 +1,6 @@
 import { useEffect, type ReactNode } from 'react'
 import { useSheetDrag } from '@/hooks/use-sheet-drag'
+import { lockScroll } from '@/lib/scroll-root'
 import { cn } from '@/lib/utils'
 
 type BottomSheetProps = {
@@ -47,8 +48,7 @@ export function BottomSheet({ open, onClose, label, className, children }: Botto
     document.addEventListener('keydown', onKey)
 
     /* Прокрутка повертається при закритті, розмонтуванні й коли вікно ширшим за 860 px (там шторки немає). */
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const unlock = lockScroll()
     const wide = matchMedia('(min-width: 861px)')
     const onWide = () => wide.matches && onClose()
     wide.addEventListener('change', onWide)
@@ -56,7 +56,7 @@ export function BottomSheet({ open, onClose, label, className, children }: Botto
     return () => {
       document.removeEventListener('keydown', onKey)
       wide.removeEventListener('change', onWide)
-      document.body.style.overflow = previous
+      unlock()
       if (opener?.isConnected) opener.focus({ preventScroll: true })
     }
   }, [open, onClose, sheet])

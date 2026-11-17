@@ -1,4 +1,5 @@
 import { useEffect, useSyncExternalStore } from 'react'
+import { scrollToTop } from './scroll-root'
 
 /* Мінімальний роутер на History API: без залежностей. Внутрішні посилання (href починається з «/»)
    не перезавантажують сторінку. Якорі на тій самій сторінці (href починається з «#») лишаються звичайними. */
@@ -49,7 +50,7 @@ export function useRouterEffects() {
     const frame = requestAnimationFrame(() => {
       const target = hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null
       if (target) target.scrollIntoView()
-      else scrollTo(0, 0)
+      else scrollToTop()
     })
     return () => cancelAnimationFrame(frame)
     // key змінюється на кожен перехід, у тому числі на ту саму адресу.

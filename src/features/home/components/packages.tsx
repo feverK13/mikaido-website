@@ -1,3 +1,4 @@
+import { scrollRoot } from '@/lib/scroll-root'
 import { useEffect, useState } from 'react'
 import { FULLSCREEN_MIN_HEIGHT, SNAP_ENABLED } from '@/config/package-selector'
 import { Section, SectionHeader } from '@/components/layout/section'
@@ -21,7 +22,7 @@ export function Packages({ chosen, onChoose }: PackagesProps) {
   /* Прилипання до блоку: scroll-snap proximity на html, лише коли вікно не нижче 560 px. Вимикається прапорцем SNAP_ENABLED. */
   useEffect(() => {
     if (!SNAP_ENABLED) return
-    const html = document.documentElement
+    const html = scrollRoot()
     const query = matchMedia(`(min-height: ${FULLSCREEN_MIN_HEIGHT}px)`)
     const apply = () => {
       html.style.scrollSnapType = query.matches ? 'y proximity' : ''
