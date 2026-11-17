@@ -13,6 +13,10 @@ import { cn } from '@/lib/utils'
 import { PROCESS_SECTION as C } from '../content'
 
 const LAST = PROCESS_STEPS.length
+/** Тривалість одного етапу в циклі й усіх етапів разом (успіх 8 с і пауза 1,5 с додаються після). */
+const STAGE_MS = 3600
+const RUN_MS = LAST * STAGE_MS
+const SUCCESS_MS = 8000
 
 /** Піксельна лінія ірису під написом про запуск (dither 80 × 2). */
 function WinLine({ dark }: { dark: boolean }) {
@@ -68,7 +72,7 @@ function WinCheck() {
   )
 }
 
-/** Секція «Процес»: етапи як точки збереження. Опис друкується терміналом, коли блок з'являється; цикл ≈30 с: 5 × 5 с, успіх 3 с, пауза 1,5 с. */
+/** Секція «Процес»: етапи як точки збереження. Опис друкується терміналом, коли блок з'являється; цикл ≈27,5 с: 5 × 3,6 с, успіх 8 с, пауза 1,5 с. */
 export function Process() {
   const { theme } = useTheme()
   const [stage, setStage] = useState(LAST)
@@ -100,16 +104,16 @@ export function Process() {
       setWin(true)
       return
     }
-    for (let k = 0; k < LAST; k++) at(k * 5000, () => setStage(k))
-    at(25000, () => {
+    for (let k = 0; k < LAST; k++) at(k * STAGE_MS, () => setStage(k))
+    at(RUN_MS, () => {
       setStage(LAST)
       setWin(true)
     })
-    at(28000, () => {
+    at(RUN_MS + SUCCESS_MS, () => {
       setWin(false)
       setStage(-1)
     })
-    at(29500, () => again.current?.())
+    at(RUN_MS + SUCCESS_MS + 1500, () => again.current?.())
   }, [at])
 
   useEffect(() => {
@@ -126,7 +130,7 @@ export function Process() {
     for (let i = 0; i < PROCESS_STEPS.length; i++) {
       const el = paragraphs.current[i]
       if (!el || !alive.current) return
-      await typeText(el, PROCESS_STEPS[i].description, { speed: isCoarsePointer() ? 14 : 20 })
+      await typeText(el, PROCESS_STEPS[i].description, { speed: isCoarsePointer() ? 11 : 17 })
       await new Promise((r) => setTimeout(r, 80))
     }
     if (alive.current) loop()
