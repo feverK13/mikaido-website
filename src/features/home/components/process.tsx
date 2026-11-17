@@ -80,7 +80,8 @@ export function Process() {
   const paragraphs = useRef<(HTMLElement | null)[]>([])
   const timers = useRef<number[]>([])
   const alive = useRef(true)
-  const started = useRef(false)
+  const typing = useRef(false)
+  const run = useRef(0)
   const again = useRef<() => void>(undefined)
 
   useEffect(() => {
@@ -121,19 +122,29 @@ export function Process() {
   }, [loop])
 
   const start = useCallback(async () => {
+    timers.current.forEach(clearTimeout)
+    timers.current = []
+    const id = ++run.current
+    setWin(false)
     if (!isMotionAllowed()) {
       paragraphs.current.forEach((el, i) => el && (el.textContent = PROCESS_STEPS[i].description))
       setStage(LAST)
       return
     }
     setStage(-1)
+    paragraphs.current.forEach((el) => el && (el.textContent = ''))
+    typing.current = true
     for (let i = 0; i < PROCESS_STEPS.length; i++) {
       const el = paragraphs.current[i]
-      if (!el || !alive.current) return
+      if (!el || !alive.current) {
+        typing.current = false
+        return
+      }
       await typeText(el, PROCESS_STEPS[i].description, { speed: isCoarsePointer() ? 11 : 17 })
       await new Promise((r) => setTimeout(r, 80))
     }
-    if (alive.current) loop()
+    typing.current = false
+    if (alive.current && id === run.current) loop()
   }, [loop])
 
   const progress = Math.min(Math.max(stage, 0), 4) / 4
@@ -143,9 +154,8 @@ export function Process() {
       <SectionHeader tab={C.tab} title={C.title} lead={C.lead} />
       <DissolveReveal
         onRevealed={() => {
-          /* Друк і цикл запускаються лише при першій появі: повторні входи показують блок як є. */
-          if (started.current) return
-          started.current = true
+          /* Щоразу, коли блок з'являється, друк і цикл ідуть з початку. Поки триває друк, повторний вхід не перезапускає його. */
+          if (typing.current) return
           void start()
         }}
       >
