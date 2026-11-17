@@ -14,7 +14,7 @@ import { PROCESS_SECTION as C } from '../content'
 
 const LAST = PROCESS_STEPS.length
 /** Тривалість одного етапу в циклі й усіх етапів разом (успіх 8 с і пауза 1,5 с додаються після). */
-const STAGE_MS = 3600
+const STAGE_MS = 2800
 const RUN_MS = LAST * STAGE_MS
 const SUCCESS_MS = 8000
 
