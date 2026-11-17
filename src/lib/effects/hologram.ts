@@ -3,9 +3,9 @@
    Логіку перенесено з docs/design-system/components/bundle.js (об'єкт HOLO) без змін. */
 import { iris } from './iris'
 
-/** Воксель: x, y, z, s (s = 1 акцентний). */
-type Voxel = [number, number, number, number]
-type Model = 'page' | 'calendar' | 'nodes' | 'box'
+/** Воксель: x, y, z, s (s = 1 акцентний, s = 2 нейтральний), g (необов'язково: позиція в градієнті ірису 0..1). */
+type Voxel = [number, number, number, number, number?]
+type Model = 'page' | 'calendar' | 'nodes' | 'box' | 'mark'
 type Style = 'vox' | 'wire' | 'dot'
 type Base = 'grid' | 'marks' | 'shadow' | 'none' | 'beam'
 
@@ -23,12 +23,13 @@ type Item = {
   base: Base
   scan: boolean
   noGlitch: boolean
+  pitch: number
   W: number
   H: number
   d: number
 }
 
-type Point = [number, number, number, number, number]
+type Point = [number, number, number, number, number, number | undefined]
 
 function page(): Voxel[] {
   const v: Voxel[] = []
@@ -119,12 +120,75 @@ function box(): Voxel[] {
   return v
 }
 
-const MODELS: Record<Model, () => Voxel[]> = { page, calendar, nodes, box }
+/* Знак Mikaido з docs/design-system/assets/Logos/mikaido-mark-flat.svg (viewBox 240x140).
+   Растеризація полотна на сітку 6 одиниць: окуляри (ромб-шеврон) товщиною 3 воксели з градієнтом ірису вздовж x,
+   вигнуті назад до країв і втоплені в ніжки; дві суцільні ніжки 5x15 завтовшки 4 воксели нейтрального кольору.
+   Усередині тіл порожньо: лишаємо лише поверхню. Крок вокселя менший за базовий (MARK_PITCH), тож координати
+   зводимо до одиниць S. */
+const MARK_PITCH = 0.6
+
+function mark(): Voxel[] {
+  const U = 6
+  const poly: [number, number][] = [
+    [2, 8],
+    [120, 58],
+    [238, 8],
+    [120, 106],
+  ]
+  const inPoly = (x: number, y: number) => {
+    let inside = false
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [xi, yi] = poly[i]
+      const [xj, yj] = poly[j]
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside
+    }
+    return inside
+  }
+  // Градієнт SVG: x1=0 y1=0 x2=1 y2=.35 у частках рамки полігона.
+  const grad = (x: number, y: number) => {
+    const u = (x - 2) / 236
+    const v = (y - 8) / 98
+    return Math.max(0, Math.min(1, (u + v * 0.35) / (1 + 0.35 * 0.35)))
+  }
+
+  const cells = new Map<string, Voxel>()
+  const put = (i: number, j: number, k: number, s: number, g?: number) => {
+    cells.set([i, j, k].join(), [(i * U + U / 2 - 120) / U, -((j * U + U / 2 - 71) / U), k - 2.5, s, g])
+  }
+
+  for (let j = 0; j < 24; j++) {
+    for (let i = 0; i < 40; i++) {
+      const x = i * U + U / 2
+      const y = j * U + U / 2
+      const leg = (x >= 50 && x <= 80) || (x >= 160 && x <= 190)
+      if (leg && y >= 44 && y <= 134) for (const k of [0, 1, 2, 3]) put(i, j, k, 2)
+      if (inPoly(x, y)) {
+        // Вигин окулярів: центр висунутий вперед, краї загинаються назад і занурюються в ніжки.
+        const u = (x - 120) / 118
+        const zc = Math.round(4 - 2.5 * u * u)
+        for (const k of [zc - 1, zc, zc + 1]) put(i, j, k, 0, grad(x, y))
+      }
+    }
+  }
+
+  const has = (i: number, j: number, k: number) => cells.has([i, j, k].join())
+  const out: Voxel[] = []
+  for (const [key, v] of cells) {
+    const [i, j, k] = key.split(',').map(Number)
+    const inner =
+      has(i + 1, j, k) && has(i - 1, j, k) && has(i, j + 1, k) && has(i, j - 1, k) && has(i, j, k + 1) && has(i, j, k - 1)
+    if (!inner) out.push([v[0] * MARK_PITCH, v[1] * MARK_PITCH, v[2] * MARK_PITCH, v[3], v[4]])
+  }
+  return out
+}
+
+const MODELS: Record<Model, () => Voxel[]> = { page, calendar, nodes, box, mark }
+const pitchOf = (model: Model) => (model === 'mark' ? MARK_PITCH : 1)
 
 function edges(vox: Voxel[]): Voxel[] {
-  const set = new Set(vox.map((p) => p.slice(0, 3).map(Math.round).join()))
+  const set = new Set(vox.map((p) => [p[0], p[1], p[2]].map(Math.round).join()))
   return vox.filter((p) => {
-    const [x, y, z] = p.map(Math.round)
+    const [x, y, z] = [p[0], p[1], p[2]].map(Math.round)
     const h = (a: number, b: number, c: number) => set.has([a, b, c].join())
     let full = 0
     if (h(x + 1, y, z) && h(x - 1, y, z)) full++
@@ -166,6 +230,7 @@ function mount(cv: HTMLCanvasElement, model: Model, style: Style, opts: MountOpt
     base: opts.base || 'beam',
     scan: !!opts.scan,
     noGlitch: !!opts.noGlitch,
+    pitch: pitchOf(model),
     W: 0,
     H: 0,
     d: 1,
@@ -188,7 +253,7 @@ function draw(it: Item, t: number) {
       ? Math.max(2, Math.round(S * 0.45))
       : it.style === 'dot'
         ? S
-        : S - Math.max(1, Math.round(d))
+        : Math.round(S * it.pitch) - Math.max(1, Math.round(d))
   const a = RM() ? it.a0 : it.a0 + t * 0.00045
   const tilt = 0.32
   const ca = Math.cos(a)
@@ -202,7 +267,7 @@ function draw(it: Item, t: number) {
     const z1 = -p[0] * sa + p[2] * ca
     const y1 = p[1] * ct - z1 * st
     const dep = p[1] * st + z1 * ct
-    return [cx + Math.round(x1 * S), cy - Math.round(y1 * S), dep, p[1], p[3]]
+    return [cx + Math.round(x1 * S), cy - Math.round(y1 * S), dep, p[1], p[3], p[4]]
   })
   pts.sort((A, B) => A[2] - B[2])
   let ymin = 1e9
@@ -296,7 +361,8 @@ function draw(it: Item, t: number) {
     ctx.fillRect(cx, (((y0 + y9) / 2) | 0) - S, lw, S * 2)
   }
 
-  ctx.globalCompositeOperation = dark ? 'lighter' : 'source-over'
+  // Щільні моделі (дрібний крок вокселя, поверхня в кілька шарів) без адитивного змішування, інакше з ребра біліють.
+  ctx.globalCompositeOperation = dark && it.pitch === 1 ? 'lighter' : 'source-over'
   const flick = RM() ? 1 : 0.9 + 0.1 * Math.sin(t / 140 + it.seed)
   const sweep = RM() ? 0.35 : ((t / 3200 + it.seed) % 1.6) - 0.3
   for (const p of pts) {
@@ -312,11 +378,29 @@ function draw(it: Item, t: number) {
       c = p[4] ? iris(0.75, dark) : dark ? [141, 182, 236] : [44, 99, 176]
       al = (0.55 + 0.45 * front) * flick
     } else {
-      c = iris(p[4] ? 0.85 : ty * 0.7, dark)
-      al = (0.35 + 0.6 * front) * flick
+      c =
+        p[5] !== undefined
+          ? iris(p[5], dark)
+          : p[4] === 2
+            ? dark
+              ? [201, 204, 211]
+              : [38, 40, 46]
+            : iris(p[4] ? 0.85 : ty * 0.7, dark)
+      // Щільна модель накладає шари без адитивного змішування, тому прозорість вища, щоб колір лишався насиченим.
+      const dense = it.pitch < 1
+      al = (dense ? (p[4] === 2 ? 0.4 + 0.25 * front : 0.62 + 0.3 * front) : 0.35 + 0.6 * front) * flick
       if (it.scan) {
         const b = Math.abs(ty - (1 - sweep))
-        if (b < 0.08) al = Math.min(1, al + 0.45)
+        if (dense) {
+          // Смуга скану двома ступенями, як у решти голограм: ядро й вужчий ореол без плавного спаду.
+          const k = b < 0.08 ? 0.55 : b < 0.16 ? 0.22 : 0
+          if (k > 0) {
+            al = al + (1 - al) * k
+            const m = (dark ? 0.6 : 0.3) * k
+            const to = dark ? 255 : 0
+            c = [c[0] + (to - c[0]) * m, c[1] + (to - c[1]) * m, c[2] + (to - c[2]) * m]
+          }
+        } else if (b < 0.08) al = Math.min(1, al + 0.45)
         else if (b < 0.16) al += 0.15
       }
     }
@@ -373,5 +457,5 @@ function redraw() {
   items.forEach((it) => draw(it, performance.now()))
 }
 
-export const HOLO = { mount, start, redraw, models: MODELS, iris, RM, SYS_RM }
+export const HOLO = { mount, start, redraw, models: MODELS, pitchOf, iris, RM, SYS_RM }
 export type { Base as HologramBase, Model as HologramModel, MountOptions as HologramOptions }

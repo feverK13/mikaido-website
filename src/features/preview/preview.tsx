@@ -32,7 +32,7 @@ import { Stat, Term } from '@/components/ui/term'
 import { TextLink } from '@/components/ui/text-link'
 import { Toggle } from '@/components/ui/toggle'
 
-const MODELS: HologramModel[] = ['page', 'calendar', 'nodes', 'box']
+const MODELS: HologramModel[] = ['page', 'calendar', 'nodes', 'box', 'mark']
 
 function Effects() {
   const decodeRef = useRef<HTMLHeadingElement>(null)

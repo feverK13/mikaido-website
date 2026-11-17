@@ -9,7 +9,7 @@ import { HERO } from '../content'
 
 /** Перший екран: заголовок із розшифруванням, дві дії, підпис із курсором, голограма календаря, чотири факти. */
 export function Hero() {
-  const hologram = useHologram('calendar')
+  const hologram = useHologram('mark')
 
   return (
     <Section id="top" hero>

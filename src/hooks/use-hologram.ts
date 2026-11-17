@@ -23,7 +23,9 @@ export function useHologram(model: HologramModel): RefObject<HTMLCanvasElement |
   }, [])
 
   useEffect(() => {
-    if (item.current) item.current.vox = HOLO.models[model]()
+    if (!item.current) return
+    item.current.vox = HOLO.models[model]()
+    item.current.pitch = HOLO.pitchOf(model)
   }, [model])
 
   return ref
