@@ -26,5 +26,14 @@ export function SwapText({ text, mode, className }: SwapTextProps) {
     else void typeText(node, text)
   }, [text, mode])
 
-  return <span ref={wrap} aria-hidden="true" className={className} />
+  /* Невидима копія нового тексту тримає розмір і перенесення рядків, тож ефект (випадкові символи, друк) не рухає сусідні блоки.
+     Живий текст лежить поверх у тій самій клітинці й не впливає на розкладку. */
+  return (
+    <span aria-hidden="true" className={className}>
+      <span className="grid">
+        <span inert className="invisible [grid-area:1/1]">{text}</span>
+        <span ref={wrap} className="[grid-area:1/1]" />
+      </span>
+    </span>
+  )
 }
